@@ -102,7 +102,7 @@ const WatchLater = () => {
             </div>
           </div>
           <div className="flex justify-center mt-11">
-            <Link href="/pages/favourites">
+            <Link href="/pages/portalUnsubscribed">
               <button className="bg-green-700 w-40 h-12 rounded-lg shadow-sm shadow-gray-500 cursor-pointer z-50 border border-red-500">
                 Continue
               </button>

@@ -43,7 +43,7 @@ const Home = () => {
           <div className="mt-10 ml-4 flex">
             <input type="checkbox" name="rememberMe" id="" className="z-50" />
             <div className="ml-1  text-xs ">Remember me</div>
-            <Link className="ml-14 text-xs cursor-pointer z-50" href="#">
+            <Link className="ml-8 text-xs cursor-pointer z-50" href="#">
               Forgot Password
             </Link>
           </div>
