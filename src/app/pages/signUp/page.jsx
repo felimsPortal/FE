@@ -1,8 +1,12 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useFormContext } from "@/app/context/FormContext";
 
 const SignUp = () => {
+  const { formData, handleChange } = useFormContext();
+
   return (
     <div className="w-screen h-screen flex items-center">
       <div className="w-full">
@@ -22,35 +26,37 @@ const SignUp = () => {
           <div className="flex justify-center">
             <input
               className="mt-24 bg-transparent border-b-2 border-gray-600 z-50"
-              type="text"
+              name="displayName"
+              value={formData.displayName}
+              onChange={handleChange}
               placeholder="Display name"
             />
           </div>
+
           <div className="flex justify-center">
             <input
               className="mt-8 bg-transparent border-b-2 border-gray-600 z-50"
-              type="text"
-              placeholder="Username"
-            />
-          </div>
-          <div className="flex justify-center">
-            <input
-              className="mt-8 bg-transparent border-b-2 border-gray-600 z-50"
-              type="text"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Email"
             />
           </div>
           <div className="flex justify-center">
             <input
               className="mt-8 bg-transparent border-b-2 border-gray-600 z-50"
-              type="text"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Password"
             />
           </div>
           <div className="flex justify-center">
             <input
               className="mt-8 bg-transparent border-b-2 border-gray-600 z-50"
-              type="text"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
               placeholder="Confirm Password"
             />
           </div>
