@@ -1,6 +1,7 @@
 import { Montserrat_Alternates } from "next/font/google";
 import "./globals.css";
 import { FormProvider } from "./context/FormContext";
+import { AuthContextProvider } from "./context/AuthContext";
 
 const montserrat = Montserrat_Alternates({
   subsets: ["latin"],
@@ -15,9 +16,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <FormProvider>
-        <body className={montserrat.className}>{children}</body>
-      </FormProvider>
+      <body className={montserrat.className}>
+        <AuthContextProvider>
+          <FormProvider>{children}</FormProvider>
+        </AuthContextProvider>
+      </body>
     </html>
   );
 }

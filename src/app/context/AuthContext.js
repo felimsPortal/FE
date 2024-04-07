@@ -1,3 +1,4 @@
+"use client";
 import { useContext, createContext, useState, useEffect } from "react";
 import {
   signInWithEmailAndPassword,
@@ -16,7 +17,7 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState();
 
   const actionCodeSettings = {
-    url: "localhost:3000",
+    url: "localhost:3000/pages/signUp",
     handleCodeInApp: true,
     iosBundleID: "com.example.ios",
     androidPackageName: "com.example.android",
@@ -35,12 +36,71 @@ export const AuthContextProvider = ({ children }) => {
   const sendEmailLink = (email) => {
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then(() => {
-        window.localStorage.setITem("emailForSignIn", email);
+        window.localStorage.setItem("emailForSignIn", email);
       })
       .catch((error) => {
-        const errorCode = error.Code;
-        const errorMessage = error.Message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
         console.log(errorCode, errorMessage);
       });
   };
+
+  const newUser = (email, password) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        setUser(userCredential.user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
+  };
+
+  const signIn = (email, password) => {
+    return new Promise((resolve, reject) => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          setUser(userCredential.user);
+          console.log("this function has ran");
+          resolve();
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          reject(error);
+        });
+    });
+  };
+
+  const logOut = () => {
+    signOut(auth);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, [user]);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        newUser,
+        signIn,
+        sendEmailLink,
+        logOut,
+        resetPassword,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const UserAuth = () => {
+  return useContext(AuthContext);
 };
