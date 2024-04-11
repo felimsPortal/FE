@@ -17,7 +17,7 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState();
 
   const actionCodeSettings = {
-    url: "localhost:3000/pages/signUp",
+    url: "https://fe-inky-pi.vercel.app/pages/signUp",
     handleCodeInApp: true,
     iosBundleID: "com.example.ios",
     androidPackageName: "com.example.android",
