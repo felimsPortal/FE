@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -61,10 +60,7 @@ const Home = () => {
           </div>
           <div className="text-sm mt-6 flex justify-center">
             Don&apos;t have an account?
-            <Link
-              href="pages/emailConfirm"
-              className="ml-2 underline text-blue-400"
-            >
+            <Link href="pages/signUp" className="ml-2 underline text-blue-400">
               Get started
             </Link>
           </div>
