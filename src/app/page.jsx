@@ -48,18 +48,7 @@ const Home = () => {
                 Forgot Password?
               </Link>
             </div>
-            {/* <div className="text-sm mt-6 flex justify-center ">
-              Or continue with
-            </div>
-            <div className="mt-4 flex justify-center">
-              <Image
-                src="/Google__G__logo.svg.png"
-                alt="googleLogo"
-                width={20}
-                height={110}
-              />
-              <button className="ml-2 cursor-pointer z-50">Google</button>
-            </div> */}
+
             <div className="text-lg  mt-12 flex justify-center">
               New to Felims?
               <Link
@@ -70,15 +59,6 @@ const Home = () => {
               </Link>
             </div>
           </div>
-          {/* <div className="absolute mb-36">
-          <Image
-            className="mb-96 ml-36"
-            src="/bird.png"
-            alt="bird"
-            width={180}
-            height={500}
-          />
-        </div> */}
         </div>
       </div>
     </div>
