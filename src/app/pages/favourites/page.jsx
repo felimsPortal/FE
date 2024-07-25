@@ -1,17 +1,46 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Righteous } from "next/font/google";
+import Navbar from "@/app/components/navbar/navbar";
+import { Fjalla_One } from "next/font/google";
 
-const righteous = Righteous({
+const Fjalla = Fjalla_One({
   weight: "400",
   subsets: ["latin"],
 });
 
 const Favourites = () => {
   return (
-    <div className="w-screen h-screen">
-      <div className={righteous.className}>
+    <div className="w-screen h-screen ">
+      <div className="h-1/6">
+        <Navbar />
+      </div>
+      <div className="w-full h-5/6 flex">
+        <div className="w-2/3 ">
+          <video className="" src="/navigation.mp4" autoPlay loop muted />
+        </div>
+        <div className="relative w-1/3 h-5/6 flex flex-col items-center justify-around px-16 ">
+          <div className="absolute w-1/2 h-2/3 bg-green-900 blur-3xl rounded-tl-3xl rounded-br-3xl -z-10"></div>
+          <div className={Fjalla.className}>
+            <div className="text-center text-2xl  h-1/2 flex flex-col justify-evenly mt-24">
+              <h1 className="">Hover over a Felim to for a brief synopsis</h1>
+              <br />
+
+              <h1>Add similar Felims to your profile</h1>
+
+              <br />
+              <h1>Bookmarks to watch later</h1>
+            </div>
+          </div>
+          <Link href="/pages/watchLater">
+            <button className="bg-gray-900 w-40 h-12 rounded-lg shadow-sm shadow-gray-500 cursor-pointer z-50  border border-red-500 mt-10 z-50">
+              Continue
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* <div className={righteous.className}>
         <div className="flex justify-center">
           <h1 className="text-7xl mt-12 text-green-700">
             Create your list of Felims and TV Shows
@@ -26,15 +55,7 @@ const Favourites = () => {
       </div>
 
       <div className="relative h-fit w-full flex items-center mt-10">
-        <div className="w-fit h-fit absolute mb-36 z-0">
-          <Image
-            className="mb-96 ml-80"
-            src="/bird.png"
-            alt="bird"
-            width={180}
-            height={500}
-          />
-        </div>
+   
         <div className="">
           <video
             className="w-full"
@@ -101,13 +122,7 @@ const Favourites = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center mt-11">
-            <Link href="/pages/watchLater">
-              <button className="bg-green-700 w-40 h-12 rounded-lg shadow-sm shadow-gray-500 cursor-pointer z-50 border border-red-500">
-                Continue
-              </button>
-            </Link>
-          </div>
+       
           <div className="flex justify-center">
             <div className="mt-8 w-32 h-fit flex justify-evenly">
               <div className="w-6 h-6 bg-red-400 rounded-full"></div>
@@ -116,7 +131,7 @@ const Favourites = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
