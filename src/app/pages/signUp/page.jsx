@@ -10,19 +10,8 @@ import Navbar from "@/app/components/navbar/navbar";
 
 const SignUp = () => {
   const { formData, handleChange } = useFormContext();
-  const { sendEmailLink } = UserAuth();
+  const { sendEmailLink, user, newUser } = UserAuth();
   const router = useRouter();
-  // const [email, setEmail] = useState({
-  //   email: "",
-  // });
-
-  // const handleEmailChange = (e) => {
-  //   setEmail((prevData) => ({
-  //     ...prevData,
-  //     [e.target.name]: e.target.value,
-  //   }));
-  //   console.log(email);
-  // };
 
   const sendLink = async (e) => {
     e.preventDefault();
@@ -50,8 +39,21 @@ const SignUp = () => {
     }
   };
 
+  const newUserSignUp = async (e) => {
+    try {
+      await newUser(formData.email, formData.password);
+      console.log("user has signed up and function called");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSubmit = async (e) => {
+    await sendLink(e);
+    await newUserSignUp(e);
+  };
+
   return (
-    <form onSubmit={sendLink}>
+    <form onSubmit={handleSubmit}>
       <Navbar />
       <div className="relative w-screen h-screen flex items-center justify-center ">
         <div className="w-full h-4/6 flex items-center justify-center mt-24 ">
