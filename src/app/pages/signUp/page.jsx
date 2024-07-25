@@ -12,21 +12,21 @@ const SignUp = () => {
   const { formData, handleChange } = useFormContext();
   const { sendEmailLink } = UserAuth();
   const router = useRouter();
-  const [email, setEmail] = useState({
-    email: "",
-  });
+  // const [email, setEmail] = useState({
+  //   email: "",
+  // });
 
-  const handleEmailChange = (e) => {
-    setEmail((prevData) => ({
-      ...prevData,
-      [e.target.name]: e.target.value,
-    }));
-    console.log(email);
-  };
+  // const handleEmailChange = (e) => {
+  //   setEmail((prevData) => ({
+  //     ...prevData,
+  //     [e.target.name]: e.target.value,
+  //   }));
+  //   console.log(email);
+  // };
 
   const sendLink = async (e) => {
     e.preventDefault();
-    const userEmail = email.email.trim();
+    const userEmail = formData.email.trim();
     const isValidEmail = (email) => {
       return email.includes("@");
     };
@@ -49,6 +49,7 @@ const SignUp = () => {
       }
     }
   };
+
   return (
     <form onSubmit={sendLink}>
       <Navbar />
@@ -83,8 +84,8 @@ const SignUp = () => {
               id="email"
               type="email"
               name="email"
-              value={email.email}
-              onChange={handleEmailChange}
+              value={formData.email}
+              onChange={handleChange}
               placeholder="you@example.com"
             />
           </div>
