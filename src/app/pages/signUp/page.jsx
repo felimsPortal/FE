@@ -91,6 +91,8 @@ const SignUp = () => {
           <div className="flex justify-center">
             <input
               className="mt-8 bg-transparent border-b-2 border-gray-600 z-50 text-center"
+              id="password"
+              type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
@@ -100,6 +102,8 @@ const SignUp = () => {
           <div className="flex justify-center">
             <input
               className="mt-8 bg-transparent border-b-2 border-gray-600 z-50 text-center"
+              id="confirmPassword"
+              type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
