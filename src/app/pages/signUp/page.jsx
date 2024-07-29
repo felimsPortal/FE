@@ -9,20 +9,9 @@ import { ToastContainer, toast } from "react-toastify";
 import Navbar from "@/app/components/navbar/navbar";
 
 const SignUp = () => {
-  const { formData, handleChange } = useFormContext();
-  const { sendEmailLink } = UserAuth();
+  const { formData, handleChange, handleSubmit } = useFormContext();
+  const { sendEmailLink, user, newUser } = UserAuth();
   const router = useRouter();
-  // const [email, setEmail] = useState({
-  //   email: "",
-  // });
-
-  // const handleEmailChange = (e) => {
-  //   setEmail((prevData) => ({
-  //     ...prevData,
-  //     [e.target.name]: e.target.value,
-  //   }));
-  //   console.log(email);
-  // };
 
   const sendLink = async (e) => {
     e.preventDefault();
@@ -50,8 +39,19 @@ const SignUp = () => {
     }
   };
 
+  const newUserSignUp = async (e) => {
+    try {
+      await newUser(formData.email, formData.password);
+      await sendLink(e);
+      await handleSubmit();
+      console.log("user has signed up and function called");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <form onSubmit={sendLink}>
+    <form onSubmit={newUserSignUp}>
       <Navbar />
       <div className="relative w-screen h-screen flex items-center justify-center ">
         <div className="w-full h-4/6 flex items-center justify-center mt-24 ">
@@ -71,8 +71,8 @@ const SignUp = () => {
           <div className="flex justify-center ">
             <input
               className="mt-14 bg-transparent border-b-2 border-gray-600 z-50 text-center"
-              name="displayName"
-              value={formData.displayName}
+              name="display_name"
+              value={formData.display_name}
               onChange={handleChange}
               placeholder="Display name"
             />
