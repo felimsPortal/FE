@@ -2,7 +2,8 @@
 import Image from "next/image";
 import { UserAuth } from "../../context/AuthContext";
 import { Odibee_Sans } from "next/font/google";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useFormContext } from "../../context/FormContext";
 
 const Odibee = Odibee_Sans({
   weight: "400",
@@ -14,6 +15,7 @@ function Navbar() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userName, setUserName] = useState([]);
 
   const navLinks = [
     { name: "Home", href: "/pages/portalUnsubscribed" },
@@ -21,6 +23,9 @@ function Navbar() {
     { name: "Movies", href: "#" },
     { name: "Bookmarks", href: "#" },
   ];
+
+  const { formData } = useFormContext();
+  const { display_name } = formData;
 
   const handleDropDownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -58,6 +63,24 @@ function Navbar() {
     { name: "Profile", href: "/pages/profile" },
     { name: "Donation info", href: "/donation" },
   ];
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/api/userdata");
+        if (response.ok) {
+          const data = await response.json();
+          setUserName(data.payload);
+        } else {
+          console.error("failed to fetch user data");
+        }
+      } catch (error) {
+        console.log("An error occured while fetching", error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
   return (
     <div
       className="fixed w-screen h-1/6 bg-transparent z-10"
@@ -96,7 +119,7 @@ function Navbar() {
                 <form onSubmit={handleSearchSubmit}>
                   <input
                     type="text"
-                    className="w-56 h-8 border border-gray-300 rounded-3xl focus:outline-none"
+                    className="w-56 h-8 border border-gray-300 rounded-3xl text-center focus:outline-none"
                     placeholder="Search felims"
                     value={searchQuery}
                     onChange={handleInputChange}
@@ -115,28 +138,33 @@ function Navbar() {
             )}
           </div>
 
-          <div className="w-1/5 h-full flex justify-between items-end px-28">
+          <div className="w-1/5 h-full flex justify-between items-end px-24 ">
             <div className="relative">
-              <button className=" z10 block rounded-md p2 focus:outline-none">
+              <button className="ml-2">
                 <Image
-                  className="mr-1"
+                  className=""
                   src="/dropDown.png"
                   alt="dropDown"
-                  width={70}
+                  width={30}
                   height={150}
                   onClick={handleDropDownToggle}
                 />
               </button>
               {isDropdownOpen && (
-                <div className="absolute top-2 rounded-sm w-48 z-50 flex flex-col">
-                  <div className="bg-black opacity-40 absolute h-full w-5/6 rounded-2xl -z-10"></div>
-                  <div className="w-5/6 h-full flex flex-col text-center">
+                <div className="absolute top-10 w-48 z-50 flex flex-col">
+                  <div className="bg-black opacity-40 absolute h-full w-5/6 rounded -z-10"></div>
+                  <div className="w-5/6 h-full flex flex-col">
+                    <h1>{display_name || "Guest"}</h1>
+                    <div className=""></div>
                     {dropDownLinks.map((link, index) => (
                       <a key={index} href={link.href}>
                         {link.name}
                       </a>
                     ))}
-                    <button className="" onClick={handleSignOut}>
+                    <button
+                      className="rounded-md w-fit"
+                      onClick={handleSignOut}
+                    >
                       Sign Out
                     </button>
                   </div>
@@ -144,13 +172,6 @@ function Navbar() {
               )}
             </div>
 
-            {/* <Image
-              className="mr-1"
-              src="/dropDown.png"
-              alt="dropDown"
-              width={20}
-              height={150}
-            /> */}
             <Image
               className="border-2 border-solid border-red-800 rounded-md"
               src="/Profile.jpg"
@@ -158,26 +179,20 @@ function Navbar() {
               width={80}
               height={150}
             />
-            {/* <button
-              className="bg-gray-900 w-40 h-12 rounded-lg shadow-sm shadow-gray-500 cursor-pointer z-50 border border-red-500"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </button> */}
           </div>
         </div>
       ) : (
         <div className="fixed w-screen h-1/6 flex items-center justify-center border-b-2 border-solid border-red-800  bg-black z-10 ">
           <div className="w-1/5 h-full flex items-end justify-between px-8">
             <Image
-              className="mb-2"
+              className="mb-6"
               src="/Logo2.png"
               alt="logo"
               width={75}
               height={150}
             />
             <div className={Odibee.className}>
-              <h1 className="text-7xl mb-2">FELiMS</h1>
+              <h1 className="text-7xl mb-6">FELiMS</h1>
             </div>
           </div>
         </div>
