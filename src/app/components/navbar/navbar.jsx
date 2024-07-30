@@ -15,7 +15,10 @@ function Navbar() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userName, setUserName] = useState([]);
+  const [userName, setUserName] = useState("");
+
+  const { formData } = useFormContext();
+  const { userId } = formData;
 
   const navLinks = [
     { name: "Home", href: "/pages/portalUnsubscribed" },
@@ -23,9 +26,6 @@ function Navbar() {
     { name: "Movies", href: "#" },
     { name: "Bookmarks", href: "#" },
   ];
-
-  const { formData } = useFormContext();
-  const { display_name } = formData;
 
   const handleDropDownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -65,22 +65,46 @@ function Navbar() {
   ];
 
   useEffect(() => {
+    if (!userId) {
+      console.log("No user id found");
+      return;
+    }
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/userdata");
+        const response = await fetch(
+          `http://localhost:3001/api/userdata/${userId}`
+        );
         if (response.ok) {
           const data = await response.json();
-          setUserName(data.payload);
+          setUserName(data.display_name);
         } else {
-          console.error("failed to fetch user data");
+          console.error("Failed to fetch user data");
         }
       } catch (error) {
-        console.log("An error occured while fetching", error);
+        console.log("An error occurred while fetching", error);
       }
     };
     fetchUserData();
-  }, []);
+  }, [userId]);
 
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:3001/api/userdata");
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         if (data.payload && data.payload.length > 0) {
+  //           setUserName(data.payload.display_name);
+  //         }
+  //       } else {
+  //         console.error("failed to fetch user data");
+  //       }
+  //     } catch (error) {
+  //       console.log("An error occured while fetching", error);
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, [userId]);
   return (
     <div
       className="fixed w-screen h-1/6 bg-transparent z-10"
@@ -91,7 +115,7 @@ function Navbar() {
           className="fixed w-screen h-1/6 flex items-center z-10 px-16 bg-transparent "
           style={{ backgroundColor: "transparent" }}
         >
-          <div className="w-1/5 h-full flex items-end justify-between px-4">
+          <div className="w-1/5 h-full flex items-end justify-between px-4 ">
             <Image
               className="mb-1"
               src="/Logo2.png"
@@ -154,7 +178,7 @@ function Navbar() {
                 <div className="absolute top-10 w-48 z-50 flex flex-col">
                   <div className="bg-black opacity-40 absolute h-full w-5/6 rounded -z-10"></div>
                   <div className="w-5/6 h-full flex flex-col">
-                    <h1>{display_name || "Guest"}</h1>
+                    <h1>{userName || "Guest"}</h1>
                     <div className=""></div>
                     {dropDownLinks.map((link, index) => (
                       <a key={index} href={link.href}>

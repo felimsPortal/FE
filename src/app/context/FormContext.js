@@ -5,6 +5,7 @@ const FormContext = createContext();
 
 export const FormProvider = ({ children }) => {
   const [formData, setFormData] = useState({
+    userId: "",
     display_name: "",
     email: "",
     password: "",
@@ -18,8 +19,14 @@ export const FormProvider = ({ children }) => {
     });
     console.log(formData);
   };
-
-  const handleSubmit = async () => {
+  const updateFormData = (newData) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      ...newData,
+    }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch("http://localhost:3001/api/userdata", {
         method: "POST",
@@ -29,7 +36,11 @@ export const FormProvider = ({ children }) => {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
+        const result = await response.json();
         console.log("The form has been submitted");
+        if (result.id) {
+          updateFormData({ userId: result.id });
+        }
       } else {
         console.error("failed to submit the form");
       }
