@@ -5,7 +5,6 @@ import Navbar from "./components/navbar/navbar";
 import { useRouter } from "next/navigation";
 import { UserAuth } from "./context/AuthContext";
 import { useState } from "react";
-
 const Home = () => {
   const router = useRouter();
   const { signIn } = UserAuth();
@@ -20,7 +19,6 @@ const Home = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  console.log(logInData);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -52,11 +50,12 @@ const Home = () => {
       <div className="w-full h-full flex items-center">
         <div className="w-full mt-24 ">
           <Image
-            className="rounded-md opacity-50"
+            className="rounded-md opacity-50 "
             src="/landingPageCollage.png"
             alt="landing page img"
             width={1300}
             height={800}
+            priority={true}
           />
         </div>
         <div className="relative w-1/4 h-full flex items-center justify-center">

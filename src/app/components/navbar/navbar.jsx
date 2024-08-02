@@ -1,25 +1,33 @@
 "use client";
 import Image from "next/image";
 import { UserAuth } from "../../context/AuthContext";
-import { Odibee_Sans } from "next/font/google";
+import { Odibee_Sans, Oswald } from "next/font/google";
 import { useState, useEffect } from "react";
 import { useFormContext } from "../../context/FormContext";
+import { VscSignOut } from "react-icons/vsc";
+import { GrContact } from "react-icons/gr";
+import { CiSettings } from "react-icons/ci";
+import { MdOutlinePayments } from "react-icons/md";
 
 const Odibee = Odibee_Sans({
   weight: "400",
   subsets: ["latin"],
 });
 
-function Navbar() {
+const OswaldFont = Oswald({
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const Navbar = () => {
   const { user, logOut } = UserAuth();
+  const { formData } = useFormContext();
+  const { userId } = formData;
+
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState("");
-
-  const { formData } = useFormContext();
-  const { userId } = formData;
-
   const navLinks = [
     { name: "Home", href: "/pages/portalUnsubscribed" },
     { name: "TV Shows", href: "#" },
@@ -60,8 +68,21 @@ function Navbar() {
   };
 
   const dropDownLinks = [
-    { name: "Profile", href: "/pages/profile" },
-    { name: "Donation info", href: "/donation" },
+    {
+      name: "SETTINGS",
+      href: "/pages/profile",
+      icon: <CiSettings style={{ fontSize: "30px" }} />,
+    },
+    {
+      name: "DONATIONS",
+      href: "/donation",
+      icon: <MdOutlinePayments style={{ fontSize: "30px" }} />,
+    },
+    {
+      name: "CONTACT US",
+      href: "/donation",
+      icon: <GrContact style={{ fontSize: "30px" }} />,
+    },
   ];
 
   useEffect(() => {
@@ -87,24 +108,6 @@ function Navbar() {
     fetchUserData();
   }, [userId]);
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await fetch("http://localhost:3001/api/userdata");
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         if (data.payload && data.payload.length > 0) {
-  //           setUserName(data.payload.display_name);
-  //         }
-  //       } else {
-  //         console.error("failed to fetch user data");
-  //       }
-  //     } catch (error) {
-  //       console.log("An error occured while fetching", error);
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, [userId]);
   return (
     <div
       className="fixed w-screen h-1/6 bg-transparent z-10"
@@ -121,7 +124,7 @@ function Navbar() {
               src="/Logo2.png"
               alt="logo"
               width={70}
-              height={150}
+              height={75.47}
             />
             <div className={Odibee.className}>
               <h1 className="text-7xl">FELiMS</h1>
@@ -162,9 +165,9 @@ function Navbar() {
             )}
           </div>
 
-          <div className="w-1/5 h-full flex justify-between items-end px-24 ">
-            <div className="relative">
-              <button className="ml-2">
+          <div className="w-1/5 h-full flex justify-between items-end px-24">
+            <div className="relative flex items-center justify-center">
+              <button className="">
                 <Image
                   className=""
                   src="/dropDown.png"
@@ -175,22 +178,37 @@ function Navbar() {
                 />
               </button>
               {isDropdownOpen && (
-                <div className="absolute top-10 w-48 z-50 flex flex-col">
-                  <div className="bg-black opacity-40 absolute h-full w-5/6 rounded -z-10"></div>
-                  <div className="w-5/6 h-full flex flex-col">
-                    <h1>{userName || "Guest"}</h1>
-                    <div className=""></div>
-                    {dropDownLinks.map((link, index) => (
-                      <a key={index} href={link.href}>
-                        {link.name}
-                      </a>
-                    ))}
-                    <button
-                      className="rounded-md w-fit"
-                      onClick={handleSignOut}
-                    >
-                      Sign Out
-                    </button>
+                <div className="absolute w-56 h-72 top-10 z-50 flex flex-col">
+                  <div className="bg-black opacity-40 absolute h-full w-full rounded -z-10"></div>
+                  <div className="w-full h-full flex flex-col px-2">
+                    <div className="flex items-center justify-center w-full mt-2">
+                      <h1 className={`text-3xl ${OswaldFont.className}`}>
+                        {userName || "Guest"}
+                      </h1>
+                    </div>
+                    <hr className="w-full my-4 border-t border-gray-300" />
+                    <div className="w-full h-full flex flex-col items-center justify-around ">
+                      {dropDownLinks.map((link, index) => (
+                        <a
+                          key={index}
+                          href={link.href}
+                          className={`w-full flex items-center justify-between text-lg hover:bg-gray-700 px-2 rounded ${OswaldFont.className}`}
+                        >
+                          <span className="mr-2">{link.icon}</span>
+                          {link.name}
+                        </a>
+                      ))}
+                      <div className="w-full flex items-center justify-between px-2">
+                        <VscSignOut style={{ fontSize: "30px" }} />
+
+                        <button
+                          className={`rounded-md w-fit text-xl ${OswaldFont.className}`}
+                          onClick={handleSignOut}
+                        >
+                          SIGN OUT
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -223,6 +241,6 @@ function Navbar() {
       )}
     </div>
   );
-}
+};
 
 export default Navbar;

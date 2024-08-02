@@ -28,10 +28,8 @@ const EmailSent = () => {
             className="mt-32 opacity-20"
             src="/emailSentCollage.png"
             alt="collage"
-            layout="fixed"
             width={1440}
             height={600}
-            // objectFit="cover"
           />
         </div>
       </div>
