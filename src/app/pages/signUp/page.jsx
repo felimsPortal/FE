@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useFormContext } from "@/app/context/FormContext";
-import { useState } from "react";
 import { UserAuth } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
@@ -61,7 +60,8 @@ const SignUp = () => {
               src="/signUpCollage2.png"
               alt="landing page img"
               width={1440}
-              height={800}
+              height={1240}
+              loading="lazy"
               priority={false}
             />
           </div>
