@@ -109,15 +109,9 @@ const Navbar = () => {
   }, [userId]);
 
   return (
-    <div
-      className="fixed w-screen h-1/6 bg-transparent z-10"
-      style={{ backgroundColor: "transparent" }}
-    >
+    <div className="fixed w-screen h-1/6 z-10">
       {user ? (
-        <div
-          className="fixed w-screen h-1/6 flex items-center z-10 px-16 bg-transparent "
-          style={{ backgroundColor: "transparent" }}
-        >
+        <div className="fixed w-screen h-1/6 flex items-center px-16">
           <div className="w-1/5 h-full flex items-end justify-between px-4 ">
             <Image
               className="mb-1"
@@ -178,31 +172,31 @@ const Navbar = () => {
                 />
               </button>
               {isDropdownOpen && (
-                <div className="absolute w-56 h-72 top-10 z-50 flex flex-col">
-                  <div className="bg-black opacity-40 absolute h-full w-full rounded -z-10"></div>
+                <div className="absolute w-56 h-72 top-10 z-50 flex flex-col bg-purple-600">
+                  <div className="bg-white opacity-100 absolute h-full w-full rounded -z-10"></div>
                   <div className="w-full h-full flex flex-col px-2">
-                    <div className="flex items-center justify-center w-full mt-2">
+                    <div className="flex items-center justify-center w-full mt-2 text-black">
                       <h1 className={`text-3xl ${OswaldFont.className}`}>
                         {userName || "Guest"}
                       </h1>
                     </div>
-                    <hr className="w-full my-4 border-t border-gray-300" />
+                    <hr className="w-full my-4 border-t border-gray-900" />
                     <div className="w-full h-full flex flex-col items-center justify-around ">
                       {dropDownLinks.map((link, index) => (
                         <a
                           key={index}
                           href={link.href}
-                          className={`w-full flex items-center justify-between text-lg hover:bg-gray-700 px-2 rounded ${OswaldFont.className}`}
+                          className={`w-full flex items-center justify-between text-lg hover:bg-gray-700 px-2 text-black rounded ${OswaldFont.className}`}
                         >
                           <span className="mr-2">{link.icon}</span>
                           {link.name}
                         </a>
                       ))}
-                      <div className="w-full flex items-center justify-between px-2">
+                      <div className="w-full flex items-center justify-between px-2 text-black">
                         <VscSignOut style={{ fontSize: "30px" }} />
 
                         <button
-                          className={`rounded-md w-fit text-xl ${OswaldFont.className}`}
+                          className={`rounded-md w-fit text-xl text-black ${OswaldFont.className}`}
                           onClick={handleSignOut}
                         >
                           SIGN OUT
