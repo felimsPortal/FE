@@ -4,6 +4,7 @@ import { Poiret_One, Odibee_Sans } from "next/font/google";
 import Image from "next/image";
 import EmblaCarousel from "../../components/carousel/carousel";
 import Navbar from "@/app/components/navbar/navbar";
+import Footer from "@/app/components/footer/footer";
 
 const Odibee = Odibee_Sans({
   weight: "400",
@@ -26,7 +27,7 @@ const Portal = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 100);
+      setIsScrolled(scrollTop > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -37,13 +38,16 @@ const Portal = () => {
   }, []);
 
   return (
-    <div className="no-scrollbar w-screen h-screen">
-      {/* Navbar */}
-      {/* <ScrollEffectWrapper /> */}
+    <div className="w-screen h-screen">
       <div
-        className={`fixed w-full h-1/6 z-10 transition-opacity duration-5000 ${
-          isScrolled ? "bg-black" : "bg-transparent"
+        className={`fixed w-full h-32  z-10 transition-opacity ${
+          isScrolled ? "bg-gradient-to-b from-black to-black" : "bg-transparent"
         }`}
+        style={{
+          background: isScrolled
+            ? "linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1))"
+            : "transparent",
+        }}
       >
         <Navbar />
       </div>
@@ -123,6 +127,7 @@ const Portal = () => {
           RECENTLY ADDED
         </div>
         <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+        <Footer />
       </div>
     </div>
   );
