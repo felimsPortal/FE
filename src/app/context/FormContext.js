@@ -36,6 +36,7 @@ export const FormProvider = ({ children }) => {
     });
     console.log(formData);
   };
+
   const updateFormData = (newData) => {
     setFormData((prevData) => ({
       ...prevData,
