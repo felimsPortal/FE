@@ -12,7 +12,7 @@ const Footer = () => {
           <FaRegCopyright />
           2024
         </div>
-        <Link href="#">
+        <Link href="/pages/dmca" target="blank">
           <h1>DMCA</h1>
         </Link>
         <Link href="#">

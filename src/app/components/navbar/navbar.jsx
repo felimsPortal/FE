@@ -31,8 +31,8 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", link: "/pages/portalUnsubscribed" },
     { name: "TV Shows", link: "/pages/tvShows" },
-    { name: "Movies", href: "#" },
-    { name: "Bookmarks", href: "#" },
+    { name: "Movies", link: "/pages/movies" },
+    { name: "Bookmarks", link: "/pages/bookmarks" },
     { name: "Documentaries", href: "#" },
   ];
 
