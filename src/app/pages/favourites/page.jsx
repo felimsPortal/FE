@@ -31,7 +31,7 @@ const Favourites = () => {
               <h1>Bookmarks to watch later</h1>
             </div>
           </div>
-          <Link href="/pages/portalUnsubscribed">
+          <Link href="/pages/profile">
             <button className="bg-gray-900 w-40 h-12 rounded-lg shadow-sm shadow-gray-500 cursor-pointer border border-red-500 mt-10">
               Continue
             </button>
