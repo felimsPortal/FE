@@ -62,6 +62,7 @@ const Portal = () => {
             autoPlay
             loop
             muted
+            controls
           />
           {/* Text Overlay */}
           <div className="absolute w-5/6 h-full">
