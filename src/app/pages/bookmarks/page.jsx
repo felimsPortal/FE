@@ -1,11 +1,5 @@
-import Player from "@/app/components/jsplayer/player";
-
 const Bookmarks = () => {
-  return (
-    <div>
-      <Player />
-    </div>
-  );
+  return <div>Enter</div>;
 };
 
 export default Bookmarks;

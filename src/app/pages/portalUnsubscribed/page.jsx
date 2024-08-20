@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Poiret_One, Odibee_Sans } from "next/font/google";
 import Image from "next/image";
 import EmblaCarousel from "../../components/carousel/carousel";
-import Navbar from "@/app/components/navbar/navbar";
-import Footer from "@/app/components/footer/footer";
+import Navbar from "../../components/navbar/navbar";
+import Footer from "../../components/footer/footer";
 
 const Odibee = Odibee_Sans({
   weight: "400",

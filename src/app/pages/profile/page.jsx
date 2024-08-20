@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import Footer from "@/app/components/footer/footer";
-import Languages from "@/app/components/lanuages/languages";
-import Genres from "@/app/components/genres/genres";
+import Footer from "../../components/footer/footer";
+import Languages from "../../components/lanuages/languages";
+import Genres from "../../components/genres/genres";
 import { useFormContext } from "../../context/FormContext";
 import { Fjalla_One } from "next/font/google";
 import { ToastContainer, Zoom } from "react-toastify";

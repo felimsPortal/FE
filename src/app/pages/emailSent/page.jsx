@@ -1,4 +1,4 @@
-import Navbar from "@/app/components/navbar/navbar";
+import Navbar from "../../components/Navbar";
 import Image from "next/image";
 import { Fjalla_One } from "next/font/google";
 

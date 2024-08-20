@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useFormContext } from "@/app/context/FormContext";
+import { useFormContext } from "../../context/FormContext";
 import { UserAuth } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
-import Navbar from "@/app/components/navbar/navbar";
+import Navbar from "../../components/navbar/navbar";
 
 const SignUp = () => {
   const { formData, handleChange, handleSubmit } = useFormContext();
