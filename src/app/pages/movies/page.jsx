@@ -52,9 +52,8 @@ const Movies = () => {
   }, [page]);
 
   const loadMoreMovies = () => {
-    console.log("Load more button clicked");
     if (page < totalPages) {
-      setPage((prevPage) => prevPage + 1);
+      setPage(page + 1);
     }
   };
 

@@ -23,6 +23,8 @@ const SLIDES = Array.from(Array(SLIDE_COUNT).keys()).map(
 
 const Portal = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [slides, setSlides] = useState([]);
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,6 +38,25 @@ const Portal = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  // useEffect(() => {
+  //   const fetchMovies = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:3001/api/userdata/${userId}/movies`
+  //       );
+  //       if (response.ok) {
+  //         const movies = await response.json();
+  //         setSlides(movies.map((movie) => movie.poster_path));
+  //       } else {
+  //         console.error("Failed to fetch movies");
+  //       }
+  //     } catch (error) {
+  //       console.error("An error occurred while fetching movies:", error);
+  //     }
+  //   };
+
+  //   fetchMovies();
+  // }, []);
 
   return (
     <div className="w-screen h-screen">
@@ -121,7 +142,7 @@ const Portal = () => {
         >
           FOR YOU
         </div>
-        <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+        <EmblaCarousel slides={slides} options={OPTIONS} />
         <div
           className={`w-full flex flex-col text-7xl mt-16 ml-10 ${Odibee.className}`}
         >
