@@ -2,12 +2,16 @@
 import Navbar from "../../components/navbar/navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useFormContext } from "../../context/FormContext";
 
 const Movies = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  const { formData } = useFormContext();
+  const { userId } = formData;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,16 +26,41 @@ const Movies = () => {
     };
   }, []);
 
-  const fetchMovies = async (pageNumber) => {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/api/userdata/${userId}`
+        );
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const fetchMovies = async (userId, pageNumber) => {
+    if (!userId || pageNumber === undefined) {
+      console.error("User ID or Page number is undefined");
+      return;
+    }
     try {
-      const response = await axios.get("http://localhost:3001/api/movies", {
+      const url = `http://localhost:3001/api/movies/${userId}`;
+      console.log(`Fetching movies from: ${url}`, {
         params: {
           page: pageNumber,
           page_size: 20,
         },
       });
+      const response = await axios.get(url, {
+        params: {
+          page: pageNumber,
+          page_size: 20,
+        },
+      });
+      console.log("Movies fetched:", response.data);
 
-      // Remove duplicates before setting state
       setMovies((prevMovies) => {
         const existingIds = new Set(prevMovies.map((movie) => movie.id));
         const newMovies = response.data.movies.filter(
@@ -46,10 +75,12 @@ const Movies = () => {
   };
 
   useEffect(() => {
-    fetchMovies(page);
-    console.log("Current page:", page);
-    console.log("Total pages:", totalPages);
-  }, [page]);
+    if (userId) {
+      fetchMovies(userId, page);
+      console.log("Current page:", page);
+      console.log("Total pages:", totalPages);
+    }
+  }, [userId, page]);
 
   const loadMoreMovies = () => {
     if (page < totalPages) {
