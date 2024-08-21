@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { DotButton, useDotButton } from "./emblaCarouselDotButton";
 import {
@@ -15,7 +14,6 @@ const EmblaCarousel = (props) => {
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
-
   const {
     prevBtnDisabled,
     nextBtnDisabled,
@@ -28,11 +26,15 @@ const EmblaCarousel = (props) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {slides.map((src, index) => (
-            <div className="embla__slide" key={index}>
+            <div
+              className="embla__slide"
+              key={index}
+              onClick={() => onSlideClick && onSlideClick(index)}
+            >
               <img
-                src={src}
+                src={`https://image.tmdb.org/t/p/w500${src}`}
                 alt={`Slide ${index + 1}`}
-                className="embla__slide__img rounded-xl "
+                className="embla__slide__img rounded-xl"
               />
               <div className="embla__slide__overlay">
                 {/* Content to display on hover */}
@@ -54,9 +56,9 @@ const EmblaCarousel = (props) => {
             <DotButton
               key={index}
               onClick={() => onDotButtonClick(index)}
-              className={"embla__dot".concat(
+              className={`embla__dot${
                 index === selectedIndex ? " embla__dot--selected" : ""
-              )}
+              }`}
             />
           ))}
         </div>

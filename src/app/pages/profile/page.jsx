@@ -50,7 +50,6 @@ const Profile = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            // user_id: formData.userId,
             languages: selectedLanguages,
             genres: selectedGenres,
           }),

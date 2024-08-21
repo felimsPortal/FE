@@ -18,10 +18,6 @@ const Poiret = Poiret_One({
 
 const Portal = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  // const [userData, setUserData] = useState(null);
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [error, setError] = useState(null);
-  // const [movies, setMovies] = useState([]);
 
   const { formData } = useFormContext();
   const { userId } = formData;
@@ -38,94 +34,6 @@ const Portal = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     setIsLoading(true);
-  //     setError(null);
-  //     try {
-  //       // Fetch user data
-  //       const response = await fetch(
-  //         `http://localhost:3001/api/movies/${userId}`
-  //       );
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       console.log("User and Movies Data:", data);
-  //       setUserData(data);
-
-  //       const tmdbResponse = await fetch(
-  //         `http://localhost:3001/api/tmdb/${userId}`
-  //       );
-  //       if (!tmdbResponse.ok) {
-  //         throw new Error(`TMDB fetch error! status: ${tmdbResponse.status}`);
-  //       }
-  //       const tmdbData = await tmdbResponse.json();
-  //       setMovies(tmdbData.movies);
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, [userId]);
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     setIsLoading(true);
-  //     setError(null);
-  //     try {
-  //       // Fetch user data
-  //       const response = await fetch(
-  //         `http://localhost:3001/api/movies/${userId}`
-  //       );
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       setUserData(data);
-
-  //       // Fetch movies based on user data
-  //       const tmdbResponse = await fetch(
-  //         `http://localhost:3001/api/tmdb/${userId}`
-  //       );
-  //       if (!tmdbResponse.ok) {
-  //         throw new Error(`TMDB fetch error! status: ${tmdbResponse.status}`);
-  //       }
-  //       const tmdbData = await tmdbResponse.json();
-  //       setMovies(tmdbData.movies);
-  //     } catch (error) {
-  //       setError(error.message);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, [userId]);
-
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (error) {
-  //   return <div>Error: {error}</div>;
-  // }
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (error) {
-  //   return <div>Error: {error}</div>;
-  // }
-
-  // // Check if userData is an array and has elements
-  // if (!Array.isArray(userData) || !userData.length) {
-  //   return <div>No data found.</div>;
-  // }
 
   return (
     <div className="w-screen h-screen">

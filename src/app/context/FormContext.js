@@ -70,42 +70,6 @@ export const FormProvider = ({ children }) => {
     }
   };
 
-  // const handleLanguageChange = (e) => {
-  //   const selectedLanguage = e.target.value;
-  //   setFormData((prevData) => {
-  //     // Check if the language is already selected
-  //     const isAlreadySelected = prevData.languages.includes(selectedLanguage);
-
-  //     // If selected, remove it; otherwise, add it to the array
-  //     const updatedLanguages = isAlreadySelected
-  //       ? prevData.languages.filter((lang) => lang !== selectedLanguage)
-  //       : [...prevData.languages, selectedLanguage];
-
-  //     return {
-  //       ...prevData,
-  //       languages: updatedLanguages,
-  //     };
-  //   });
-  // };
-
-  // const handleGenreChange = (e) => {
-  //   const selectedGenre = e.target.value;
-  //   setFormData((prevData) => {
-  //     // Check if the genre is already selected
-  //     const isAlreadySelected = prevData.genres.includes(selectedGenre);
-
-  //     // If selected, remove it; otherwise, add it to the array
-  //     const updatedGenres = isAlreadySelected
-  //       ? prevData.genres.filter((genre) => genre !== selectedGenre)
-  //       : [...prevData.genres, selectedGenre];
-
-  //     return {
-  //       ...prevData,
-  //       genres: updatedGenres,
-  //     };
-  //   });
-  // };
-
   return (
     <FormContext.Provider
       value={{
@@ -113,8 +77,6 @@ export const FormProvider = ({ children }) => {
         setFormData,
         handleChange,
         handleSubmit,
-        // handleLanguageChange,
-        // handleGenreChange,
       }}
     >
       {children}

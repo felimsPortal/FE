@@ -3,12 +3,15 @@ import Navbar from "../../components/navbar/navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useFormContext } from "../../context/FormContext";
+import EmblaCarousel from "../../components/carousel/carousel";
+import MovieModal from "../../components/modal/modal";
 
 const Movies = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [movies, setMovies] = useState([]);
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [movies, setMovies] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { formData } = useFormContext();
   const { userId } = formData;
@@ -26,40 +29,20 @@ const Movies = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/api/userdata/${userId}`
-        );
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
   const fetchMovies = async (userId, pageNumber) => {
+    console.log("fetchMovies called");
     if (!userId || pageNumber === undefined) {
       console.error("User ID or Page number is undefined");
       return;
     }
     try {
       const url = `http://localhost:3001/api/movies/${userId}`;
-      console.log(`Fetching movies from: ${url}`, {
-        params: {
-          page: pageNumber,
-          page_size: 20,
-        },
-      });
       const response = await axios.get(url, {
         params: {
           page: pageNumber,
           page_size: 20,
         },
       });
-      console.log("Movies fetched:", response.data);
 
       setMovies((prevMovies) => {
         const existingIds = new Set(prevMovies.map((movie) => movie.id));
@@ -82,6 +65,15 @@ const Movies = () => {
     }
   }, [userId, page]);
 
+  const openModal = (movie) => {
+    setSelectedMovie(movie);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedMovie(null);
+  };
   const loadMoreMovies = () => {
     if (page < totalPages) {
       setPage(page + 1);
@@ -102,28 +94,14 @@ const Movies = () => {
       >
         <Navbar />
       </div>
-
       <div className="w-full h-full p-4">
         <h1 className="text-2xl font-bold mt-36">Movies</h1>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-          {movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="relative flex flex-col items-center justify-center rounded-lg shadow-lg overflow-hidden"
-              style={{
-                backgroundImage: `url(${movie.poster_path})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                width: "100%",
-                aspectRatio: "2/3",
-              }}
-            >
-              <p className="absolute bottom-0 left-0 w-full text-center text-white font-bold bg-black bg-opacity-50 p-2">
-                {movie.title}
-              </p>
-            </div>
-          ))}
-        </div>
+        <EmblaCarousel
+          slides={movies.map((movie) => movie.poster_path)}
+          options={{ loop: true }}
+          onSlideClick={(index) => openModal(movies[index])}
+        />
+
         {page < totalPages && (
           <button
             onClick={loadMoreMovies}
