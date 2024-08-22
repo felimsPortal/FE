@@ -37,18 +37,24 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("formData:", formData);
+    console.log("Selected Languages:", selectedLanguages);
+    console.log("Selected Genres:", selectedGenres);
+
     try {
-      const response = await fetch("http://localhost:3001/api/movies", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: formData.userId,
-          languages: selectedLanguages,
-          genres: selectedGenres,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:3001/api/movies/${formData.userId}/movies`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            languages: selectedLanguages,
+            genres: selectedGenres,
+          }),
+        }
+      );
       console.log("Response:", response);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
