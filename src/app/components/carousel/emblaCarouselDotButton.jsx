@@ -1,24 +1,43 @@
+"use client";
+
 import React, { useCallback, useEffect, useState } from "react";
 
-export const useDotButton = (emblaApi) => {
+export const useDotButton = (emblaApi, slidesPerGroup = 5) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState([]);
+  const [groupedScrollSnaps, setGroupedScrollSnaps] = useState([]);
 
   const onDotButtonClick = useCallback(
     (index) => {
       if (!emblaApi) return;
-      emblaApi.scrollTo(index);
+      const groupIndex = index * slidesPerGroup;
+      emblaApi.scrollTo(groupIndex);
     },
-    [emblaApi]
+    [emblaApi, slidesPerGroup]
   );
 
-  const onInit = useCallback((emblaApi) => {
-    setScrollSnaps(emblaApi.scrollSnapList());
-  }, []);
+  const onInit = useCallback(
+    (emblaApi) => {
+      const allSnaps = emblaApi.scrollSnapList();
+      const groupedSnaps = [];
+      for (let i = 0; i < allSnaps.length; i += slidesPerGroup) {
+        groupedSnaps.push(allSnaps[i]);
+      }
+      setScrollSnaps(allSnaps);
+      setGroupedScrollSnaps(groupedSnaps);
+    },
+    [slidesPerGroup]
+  );
 
-  const onSelect = useCallback((emblaApi) => {
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, []);
+  const onSelect = useCallback(
+    (emblaApi) => {
+      const snapIndex = Math.floor(
+        emblaApi.selectedScrollSnap() / slidesPerGroup
+      );
+      setSelectedIndex(snapIndex);
+    },
+    [slidesPerGroup]
+  );
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -30,7 +49,7 @@ export const useDotButton = (emblaApi) => {
 
   return {
     selectedIndex,
-    scrollSnaps,
+    scrollSnaps: groupedScrollSnaps,
     onDotButtonClick,
   };
 };

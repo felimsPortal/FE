@@ -2,6 +2,36 @@ import React from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+export const languageMap = {
+  ar: "Arabic",
+  da: "Danish",
+  nl: "Dutch",
+  en: "English",
+  fr: "French",
+  de: "German",
+  it: "Italian",
+  ko: "Korean",
+  zh: "Manadarin",
+  ro: "Romanian",
+  ru: "Russian",
+  es: "Spanish",
+  sv: "Swedish",
+  tr: "Turkish",
+};
+
+export const getLanguageNames = (languageIds = []) => {
+  if (typeof languageIds === "string") {
+    languageIds = [languageIds];
+  }
+
+  if (!Array.isArray(languageIds)) {
+    console.error("Expected an array or string but got:", typeof languageIds);
+    return ["Unknown Language"];
+  }
+
+  return languageIds.map((id) => languageMap[id] || "Unknown Language");
+};
+
 const Languages = ({ selectedValues, onChange }) => {
   const handleChange = (e) => {
     const clickedOption = e.target.value;

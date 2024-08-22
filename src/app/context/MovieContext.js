@@ -20,16 +20,23 @@ export const MovieProvider = ({ children }) => {
           page_size: 20,
         },
       });
+      console.log("API Response:", response.data);
 
-      const movieData = response.data.movies.map((movie) => ({
-        id: movie.id,
-        title: movie.title,
-        overview: movie.overview,
-        release_date: movie.release_date,
-        vote_average: movie.vote_average,
-        original_language: movie.original_language,
-        poster_path: movie.poster_path,
-      }));
+      const movieData = response.data.movies.map((movie) => {
+        console.log("Processing movie:", movie);
+        return {
+          id: movie.id,
+          title: movie.title,
+          overview: movie.overview,
+          release_date: movie.release_date,
+          vote_average: movie.vote_average,
+          original_language: movie.original_language,
+          poster_path: movie.poster_path,
+          genre_ids: movie.genre_ids || [],
+        };
+      });
+
+      console.log("Processed movie data:", movieData);
 
       setMovies((prevMovies) => {
         const existingIds = new Set(prevMovies.map((movie) => movie.id));

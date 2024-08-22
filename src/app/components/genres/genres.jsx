@@ -2,6 +2,32 @@ import React from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+export const genreMap = {
+  28: "Action",
+  12: "Adventure",
+  16: "Animation",
+  35: "Comedy",
+  80: "Crime",
+  99: "Documentary",
+  18: "Drama",
+  10751: "Family",
+  14: "Fantasy",
+  36: "History",
+  27: "Horror",
+  10402: "Musical",
+  9648: "Mystery",
+  10770: "Reality TV",
+  10749: "Romance",
+  878: "Science Fiction",
+  53: "Thriller",
+  10752: "War",
+  37: "Western",
+};
+
+export const getGenreNames = (genreIds = []) => {
+  return genreIds.map((id) => genreMap[id] || "Unknown Genre");
+};
+
 const Genres = ({ selectedValues, onChange }) => {
   const handleChange = (e) => {
     const clickedOption = e.target.value;
