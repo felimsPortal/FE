@@ -60,7 +60,7 @@ const Home = () => {
         </div>
         <div className="relative w-1/4 h-full flex items-center justify-center">
           <div className="transform -rotate-90 border-t-[380px] border-t-red-700 border-l-[256px] border-l-transparent border-r-[256px] border-r-transparent mt-28 opacity-45   "></div>
-          <div className="w-72 h-2/3 bg-green-900  absolute rounded-tl-3xl rounded-br-3xl mt-24 ">
+          <div className=" w-72 h-2/3 bg-green-900  absolute rounded-tl-3xl rounded-br-3xl mt-24 ">
             <div className="w-full flex justify-center bg-pink-6">
               <h1 className="mt-8 text-gray-100 text-2xl">Sign In</h1>
             </div>

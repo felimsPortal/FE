@@ -8,6 +8,7 @@ import { VscSignOut } from "react-icons/vsc";
 import { GrContact } from "react-icons/gr";
 import { CiSettings } from "react-icons/ci";
 import { MdOutlinePayments } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 const Odibee = Odibee_Sans({
   weight: "400",
@@ -23,6 +24,7 @@ const Navbar = () => {
   const { user, logOut } = UserAuth();
   const { formData } = useFormContext();
   const { userId } = formData;
+  const router = useRouter();
 
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,9 +54,70 @@ const Navbar = () => {
     setIsSearching(false);
   };
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = async (e) => {
     e.preventDefault();
-    console.log("searching for:", searchQuery);
+    console.log("Discovering:", searchQuery);
+
+    if (!searchQuery.trim()) {
+      console.log("Search query is empty");
+      return;
+    }
+    const type = "movie";
+
+    try {
+      const movieResponse = await fetch(
+        `http://localhost:3001/api/movies/discover?type=movie&query=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
+      const tvResponse = await fetch(
+        `http://localhost:3001/api/movies/discover?type=tv&query=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
+
+      if (movieResponse.ok && tvResponse.ok) {
+        const movieData = await movieResponse.json();
+        const tvData = await tvResponse.json();
+
+        localStorage.setItem("movies", JSON.stringify(movieData.results));
+        localStorage.setItem("tvShows", JSON.stringify(tvData.results));
+
+        // const moviesEncoded = encodeURIComponent(
+        //   JSON.stringify(movieData.results)
+        // );
+        // const tvShowsEncoded = encodeURIComponent(
+        //   JSON.stringify(tvData.results)
+        // );
+
+        console.log({
+          pathname: "/pages/searchResults",
+          query: {
+            query: searchQuery,
+            movies: encodeURIComponent(JSON.stringify(movieData.results)),
+            tvShows: encodeURIComponent(JSON.stringify(tvData.results)),
+          },
+        });
+
+        router.push(
+          `/pages/searchResults?query=${encodeURIComponent(searchQuery)}`
+        );
+
+        // router.push(
+        //   `/pages/searchResults?query=${encodeURIComponent(
+        //     searchQuery
+        //   )}&movies=${moviesEncoded}&tvShows=${tvShowsEncoded}`
+        // );
+
+        console.log("Movies:", movieData.results);
+        console.log("TV Shows:", tvData.results);
+      } else {
+        console.error("Failed to fetch search results");
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching search results", error);
+    }
+
     setIsSearching(false);
   };
 
@@ -141,7 +204,7 @@ const Navbar = () => {
                 <form onSubmit={handleSearchSubmit}>
                   <input
                     type="text"
-                    className="w-56 h-8 border border-gray-300 rounded-3xl text-center focus:outline-none"
+                    className="w-56 h-8 border border-gray-300 rounded-3xl text-center focus:outline-none text-black"
                     placeholder="Search felims"
                     value={searchQuery}
                     onChange={handleInputChange}
