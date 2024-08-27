@@ -1,27 +1,25 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import EmblaCarousel from "../../components/carousel/carousel";
-import MovieModal from "../../components/modal/modal";
-import { useFormContext } from "../../context/FormContext";
+import { UserAuth } from "../../context/AuthContext";
 import { useMovies } from "../../context/MovieContext.js";
 
 const Movies = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { formData } = useFormContext();
-  const { firebase_uid } = formData; // Update to use firebase_uid
-  const { movies, totalPages, page, setPage, fetchMovies } = useMovies();
+  const { user } = UserAuth();
+  const firebase_uid = user?.uid;
+  const { totalPages, page, setPage, fetchMovies } = useMovies();
 
   useEffect(() => {
-    console.log("Firebase UID:", firebase_uid); // Log the firebase_uid
+    console.log("Firebase UID:", firebase_uid);
     if (firebase_uid) {
-      fetchMovies(firebase_uid, page); // Pass firebase_uid to fetchMovies
+      fetchMovies(firebase_uid, page);
     }
     console.log("fetchMovies called");
-  }, [firebase_uid, page, fetchMovies]); // Update dependency array to use firebase_uid
+  }, [firebase_uid, page, fetchMovies]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,21 +34,15 @@ const Movies = () => {
     };
   }, []);
 
-  const openModal = (movie) => {
-    setSelectedMovie(movie);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedMovie(null);
-  };
-
   const loadMoreMovies = () => {
     if (page < totalPages) {
       setPage(page + 1);
     }
   };
+
+  if (!firebase_uid) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="w-screen h-screen">
@@ -68,12 +60,7 @@ const Movies = () => {
       </div>
       <div className="w-full h-full p-4">
         <h1 className="text-2xl font-bold mt-36">Movies</h1>
-        <EmblaCarousel
-          slides={movies.map((movie) => movie.poster_path)}
-          options={{ loop: true }}
-          onSlideClick={(index) => openModal(movies[index])}
-        />
-
+        <EmblaCarousel firebase_uid={firebase_uid} pageNumber={page} />
         {page < totalPages && (
           <button
             onClick={loadMoreMovies}
@@ -81,14 +68,6 @@ const Movies = () => {
           >
             Load More
           </button>
-        )}
-
-        {selectedMovie && (
-          <MovieModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            movie={selectedMovie}
-          />
         )}
       </div>
     </div>

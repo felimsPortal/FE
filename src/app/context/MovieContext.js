@@ -7,11 +7,19 @@ const MovieContext = createContext();
 export const MovieProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
 
-  const fetchMovies = useCallback(async (firebase_uid, pageNumber) => {
+  const fetchMovies = useCallback(async (firebase_uid, pageNumber = page) => {
     console.log(
       `Fetching movies for firebase_uid: ${firebase_uid}, pageNumber: ${pageNumber}`
     );
+    if (!firebase_uid || !pageNumber || isNaN(pageNumber)) {
+      console.error("Invalid firebase_uid or pageNumber:", {
+        firebase_uid,
+        pageNumber,
+      });
+      return;
+    }
     try {
       const url = `http://localhost:3001/api/movies/${firebase_uid}`;
       const response = await axios.get(url, {
@@ -53,7 +61,7 @@ export const MovieProvider = ({ children }) => {
   }, []);
 
   return (
-    <MovieContext.Provider value={{ movies, totalPages, fetchMovies }}>
+    <MovieContext.Provider value={{ movies, totalPages, page, fetchMovies }}>
       {children}
     </MovieContext.Provider>
   );

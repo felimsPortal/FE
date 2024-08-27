@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { getGenreNames } from "../../components/genres/genres";
 import { getLanguageNames } from "../../components/lanuages/languages";
@@ -11,17 +11,13 @@ import {
   usePrevNextButtons,
 } from "./emblaCarouselArrowButtons";
 import useEmblaCarousel from "embla-carousel-react";
+import { FcLike, FcBookmark } from "react-icons/fc";
 import { useMovies } from "../../context/MovieContext";
-import { FcLike } from "react-icons/fc";
-import { FcBookmark } from "react-icons/fc";
 
-const EmblaCarousel = (props) => {
-  const { options } = props;
-  const [emblaRef, emblaApi] = useEmblaCarousel(options);
+const EmblaCarousel = ({ firebase_uid, page }) => {
+  const { movies, fetchMovies } = useMovies();
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const slidesPerGroup = 5;
-  const { movies } = useMovies();
-
-  const [currentMovies, setCurrentMovies] = useState([]);
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(
     emblaApi,
@@ -41,38 +37,24 @@ const EmblaCarousel = (props) => {
   };
 
   useEffect(() => {
-    const mappedMovies = movies.map((movie) => {
-      console.log(`Full movie data:`, movie);
-      const genres = getGenreNames(movie.genre_ids || []);
-      const languages = getLanguageNames([movie.original_language]);
-      console.log(languages);
+    if (firebase_uid) {
+      fetchMovies(firebase_uid, page);
+    }
+  }, [firebase_uid, page, fetchMovies]);
 
-      return {
-        src: movie.poster_path,
-        title: movie.title,
-        original_language: languages.join(", "),
-        vote_average: movie.vote_average,
-        release_date: movie.release_date,
-        genres: genres,
-        overview: movie.overview,
-      };
-    });
-
-    setCurrentMovies(mappedMovies);
-  }, [movies]);
   return (
     <section className="embla">
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
-          {currentMovies.map((movie, index) => (
+          {movies.map((movie, index) => (
             <div className="embla__slide" key={index}>
               <img
-                src={movie.src}
+                src={movie.poster_path}
                 alt={`Slide ${index + 1}`}
                 className="embla__slide__img rounded-xl"
               />
               <div className="embla__slide__overlay flex flex-col ">
-                <div className=" w-full flex justify-evenly items-center mt-10">
+                <div className="w-full flex justify-evenly items-center mt-10">
                   <Image
                     src="/Logo3.png"
                     alt="logo"
@@ -91,11 +73,10 @@ const EmblaCarousel = (props) => {
                 <div className="p-6">
                   <p className="text-xl text-center">{movie.title}</p>
                   <br />
-                  <p>Language: {movie.original_language}</p>
+                  <p>Language: {getLanguageNames([movie.original_language])}</p>
                   <p>Avg vote: {movie.vote_average}</p>
                   <p>Release Date: {movie.release_date}</p>
-                  {/* Render genres here */}
-                  <p>Genres: {movie.genres.join(", ")}</p>
+                  <p>Genres: {getGenreNames(movie.genre_ids).join(", ")}</p>
                   <br />
                   <hr />
                   <br />

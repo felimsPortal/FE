@@ -75,7 +75,7 @@ export const AuthContextProvider = ({ children }) => {
         .then((userCredential) => {
           setUser(userCredential.user);
           console.log("this function has ran");
-          resolve();
+          resolve(userCredential);
         })
         .catch((error) => {
           const errorCode = error.code;

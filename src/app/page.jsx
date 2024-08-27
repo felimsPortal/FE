@@ -24,58 +24,52 @@ const Home = () => {
   const handleSignIn = async (e) => {
     e.preventDefault();
     const userEmail = logInData.email.trim();
-    const isValidEmail = (email) => {
-      return email.includes("@");
-    };
+
     if (userEmail === "") {
       console.log("email is required");
       alert("email is required");
       return;
-    } else if (!isValidEmail(userEmail)) {
+    } else if (!userEmail.includes("@")) {
       console.log("email is invalid");
       alert("email is invalid");
       return;
-    } else {
-      try {
-        const userCredential = await signIn(
-          logInData.email,
-          logInData.password
-        );
+    }
+    try {
+      const userCredential = await signIn(logInData.email, logInData.password);
 
-        if (!userCredential || !userCredential.user) {
-          throw new Error("User sign-in failed or userCredential is undefined");
-        }
-
-        const firebase_uid = userCredential.user.uid;
-        console.log("Firebase UID in Login Page:", firebase_uid);
-
-        const response = await fetch(
-          `http://localhost:3001/api/userdata/${firebase_uid}`
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch user data: ${response.statusText}`);
-        }
-
-        const userData = await response.json();
-        console.log("User data fetched:", userData);
-
-        const { moviePreferences } = userData;
-
-        if (
-          moviePreferences.languages.length === 0 ||
-          moviePreferences.genres.length === 0
-        ) {
-          router.push("/pages/profile");
-        } else if (userData.subscribed) {
-          router.push("/pages/portalSubscribed");
-        } else {
-          router.push("/pages/portalUnsubscribed");
-        }
-      } catch (error) {
-        console.log(error);
-        alert("Email or password is incorrect");
+      if (!userCredential || !userCredential.user) {
+        throw new Error("User sign-in failed or userCredential is undefined");
       }
+
+      const firebase_uid = userCredential.user.uid;
+      console.log("Firebase UID in Login Page:", firebase_uid);
+
+      const response = await fetch(
+        `http://localhost:3001/api/userdata/${firebase_uid}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user data: ${response.statusText}`);
+      }
+
+      const userData = await response.json();
+      console.log("User data fetched:", userData);
+
+      const { moviePreferences } = userData;
+
+      if (
+        moviePreferences.languages.length === 0 ||
+        moviePreferences.genres.length === 0
+      ) {
+        router.push("/pages/profile");
+      } else if (userData.subscribed) {
+        router.push("/pages/portalSubscribed");
+      } else {
+        router.push("/pages/portalUnsubscribed");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Email or password is incorrect");
     }
   };
 

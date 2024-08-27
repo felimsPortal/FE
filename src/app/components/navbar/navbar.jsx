@@ -135,12 +135,19 @@ const Navbar = () => {
       try {
         console.log("Fetching user data for user:", user.uid);
         const response = await fetch(
-          `http://localhost:3001/api/userdata/${user.uid}`
+          `http://localhost:3001/api/movies/${user.uid}`
         );
         if (response.ok) {
           const data = await response.json();
-          console.log("User data fetched:", data);
-          setUserName(data.display_name || "Guest");
+          console.log("Full user data fetched:", data);
+          if (data.display_name) {
+            setUserName(data.display_name);
+          } else {
+            setUserName("Guest");
+            console.log("display_name not found in user data");
+          }
+
+          console.log("Combined movie and TV show data fetched:", data.results);
         } else {
           setUserName("Guest");
           console.error("Failed to fetch user data");
@@ -150,9 +157,9 @@ const Navbar = () => {
         setUserName("Guest");
       }
     };
+
     fetchUserData();
   }, [user]);
-
   return (
     <div className="fixed w-screen h-1/6 z-10">
       {user ? (
@@ -222,7 +229,7 @@ const Navbar = () => {
                   <div className="w-full h-full flex flex-col px-2">
                     <div className="flex items-center justify-center w-full mt-2 text-black">
                       <h1 className={`text-3xl ${OswaldFont.className}`}>
-                        {userName || "Guest"}
+                        {userName}
                       </h1>
                     </div>
                     <hr className="w-full my-4 border-t border-gray-900" />

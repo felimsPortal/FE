@@ -6,6 +6,7 @@ import Languages from "../../components/lanuages/languages";
 import Genres from "../../components/genres/genres";
 import { Fjalla_One } from "next/font/google";
 import { ToastContainer, Zoom } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const Fjalla = Fjalla_One({
   weight: "400",
@@ -16,6 +17,7 @@ const Profile = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
+  const router = useRouter();
 
   const handleGenreChange = (newSelectedGenres) => {
     console.log("Updated Genres State:", newSelectedGenres);
@@ -68,6 +70,7 @@ const Profile = () => {
 
         const result = await response.json();
         console.log("Movie profile saved:", result);
+        router.push("/pages/portalUnsubscribed");
       } catch (error) {
         console.error("Error saving movie profile:", error);
       }
