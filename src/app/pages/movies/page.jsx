@@ -12,16 +12,16 @@ const Movies = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { formData } = useFormContext();
-  const { userId } = formData;
+  const { firebase_uid } = formData; // Update to use firebase_uid
   const { movies, totalPages, page, setPage, fetchMovies } = useMovies();
 
   useEffect(() => {
-    console.log("User ID:", userId);
-    if (userId) {
-      fetchMovies(userId, page);
+    console.log("Firebase UID:", firebase_uid); // Log the firebase_uid
+    if (firebase_uid) {
+      fetchMovies(firebase_uid, page); // Pass firebase_uid to fetchMovies
     }
-    console.log("fecthMovies called");
-  }, [userId, page, fetchMovies]);
+    console.log("fetchMovies called");
+  }, [firebase_uid, page, fetchMovies]); // Update dependency array to use firebase_uid
 
   useEffect(() => {
     const handleScroll = () => {

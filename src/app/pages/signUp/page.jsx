@@ -5,12 +5,22 @@ import { useFormContext } from "../../context/FormContext";
 import { UserAuth } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
-import Navbar from "../../components/navbar/navbar";
+import { useEffect } from "react";
 
 const SignUp = () => {
-  const { formData, handleChange, handleSubmit } = useFormContext();
+  const { formData, handleChange, handleSubmit, handleUserCreation } =
+    useFormContext();
+
   const { sendEmailLink, user, newUser } = UserAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(formData));
+    console.log(
+      "formData stored in localStorage:",
+      localStorage.getItem("formData")
+    );
+  }, [formData]);
 
   const sendLink = async (e) => {
     e.preventDefault();
@@ -39,19 +49,55 @@ const SignUp = () => {
   };
 
   const newUserSignUp = async (e) => {
+    e.preventDefault();
+
     try {
-      await newUser(formData.email, formData.password);
+      const userCredential = await newUser(formData.email, formData.password);
+
+      if (!userCredential || !userCredential.user) {
+        throw new Error("User creation failed or userCredential is undefined");
+      }
+
+      const firebase_uid = userCredential.user.uid;
+      console.log("Firebase UID:", firebase_uid);
+
+      handleUserCreation(firebase_uid);
+
+      await handleSubmit(firebase_uid);
+      console.log("User has signed up and data sent to backend");
+
+      localStorage.setItem("firebase_uid", firebase_uid);
+      console.log(
+        "firebase_uid stored in localStorage:",
+        localStorage.getItem("firebase_uid")
+      );
+
       await sendLink(e);
-      await handleSubmit();
-      console.log("user has signed up and function called");
+
+      console.log("User has signed up and data sent to backend");
     } catch (error) {
-      console.log(error);
+      console.error("Error during signup process:", error);
     }
   };
 
   return (
     <form onSubmit={newUserSignUp}>
-      <Navbar />
+      <div className="h-32 pt-10 flex items-center justify-center">
+        <Image
+          className=""
+          src="/Logo2.png"
+          alt="logo"
+          width={75}
+          height={150}
+        />
+        <Image
+          className=""
+          src="/logoName.png"
+          alt="logo"
+          width={325}
+          height={150}
+        />
+      </div>
       <div className="relative w-screen h-screen flex items-center justify-center ">
         <div className="w-full h-4/6 flex items-center justify-center mt-24 ">
           <div className="">

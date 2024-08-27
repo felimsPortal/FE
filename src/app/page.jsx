@@ -1,10 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "./components/navbar/navbar";
 import { useRouter } from "next/navigation";
 import { UserAuth } from "./context/AuthContext";
 import { useState } from "react";
+import Footer from "./components/footer/footer";
+
 const Home = () => {
   const router = useRouter();
   const { signIn } = UserAuth();
@@ -36,21 +37,70 @@ const Home = () => {
       return;
     } else {
       try {
-        await signIn(logInData.email, logInData.password);
-        router.push("/pages/portalUnsubscribed");
+        const userCredential = await signIn(
+          logInData.email,
+          logInData.password
+        );
+
+        if (!userCredential || !userCredential.user) {
+          throw new Error("User sign-in failed or userCredential is undefined");
+        }
+
+        const firebase_uid = userCredential.user.uid;
+        console.log("Firebase UID in Login Page:", firebase_uid);
+
+        const response = await fetch(
+          `http://localhost:3001/api/userdata/${firebase_uid}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch user data: ${response.statusText}`);
+        }
+
+        const userData = await response.json();
+        console.log("User data fetched:", userData);
+
+        const { moviePreferences } = userData;
+
+        if (
+          moviePreferences.languages.length === 0 ||
+          moviePreferences.genres.length === 0
+        ) {
+          router.push("/pages/profile");
+        } else if (userData.subscribed) {
+          router.push("/pages/portalSubscribed");
+        } else {
+          router.push("/pages/portalUnsubscribed");
+        }
       } catch (error) {
         console.log(error);
-        alert("email or password is incorrect");
+        alert("Email or password is incorrect");
       }
     }
   };
+
   return (
-    <div className="w-screen h-screen">
-      <Navbar />
-      <div className="w-full h-full flex items-center">
-        <div className="w-full mt-24 ">
+    <div className="relative w-screen h-screen">
+      <div className="h-32 pt-10 flex items-center justify-center">
+        <Image
+          className=""
+          src="/Logo2.png"
+          alt="logo"
+          width={75}
+          height={150}
+        />
+        <Image
+          className=""
+          src="/logoName.png"
+          alt="logo"
+          width={325}
+          height={150}
+        />
+      </div>
+      <div className=" w-full h-5/6 flex items-center">
+        <div className="w-full">
           <Image
-            className="rounded-md opacity-50 "
+            className="rounded-md opacity-50 mb-2"
             src="/landingPageCollage.png"
             alt="landing page img"
             width={1300}
@@ -59,8 +109,8 @@ const Home = () => {
           />
         </div>
         <div className="relative w-1/4 h-full flex items-center justify-center">
-          <div className="transform -rotate-90 border-t-[380px] border-t-red-700 border-l-[256px] border-l-transparent border-r-[256px] border-r-transparent mt-28 opacity-45   "></div>
-          <div className=" w-72 h-2/3 bg-green-900  absolute rounded-tl-3xl rounded-br-3xl mt-24 ">
+          <div className="transform -rotate-90 border-t-[380px] border-t-red-700 border-l-[256px] border-l-transparent border-r-[256px] border-r-transparent opacity-45   "></div>
+          <div className=" w-72 h-2/3 bg-green-900  absolute rounded-tl-3xl rounded-br-3xl">
             <div className="w-full flex justify-center bg-pink-6">
               <h1 className="mt-8 text-gray-100 text-2xl">Sign In</h1>
             </div>
@@ -114,6 +164,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

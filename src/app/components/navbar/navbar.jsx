@@ -3,7 +3,6 @@ import Image from "next/image";
 import { UserAuth } from "../../context/AuthContext";
 import { Odibee_Sans, Oswald } from "next/font/google";
 import { useState, useEffect } from "react";
-import { useFormContext } from "../../context/FormContext";
 import { VscSignOut } from "react-icons/vsc";
 import { GrContact } from "react-icons/gr";
 import { CiSettings } from "react-icons/ci";
@@ -21,15 +20,14 @@ const OswaldFont = Oswald({
 });
 
 const Navbar = () => {
-  const { user, logOut } = UserAuth();
-  const { formData } = useFormContext();
-  const { userId } = formData;
-  const router = useRouter();
-
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState("");
+
+  const { user, logOut } = UserAuth();
+  const router = useRouter();
+
   const navLinks = [
     { name: "Home", link: "/pages/portalUnsubscribed" },
     { name: "TV Shows", link: "/pages/tvShows" },
@@ -62,7 +60,6 @@ const Navbar = () => {
       console.log("Search query is empty");
       return;
     }
-    const type = "movie";
 
     try {
       const movieResponse = await fetch(
@@ -83,34 +80,12 @@ const Navbar = () => {
         localStorage.setItem("movies", JSON.stringify(movieData.results));
         localStorage.setItem("tvShows", JSON.stringify(tvData.results));
 
-        // const moviesEncoded = encodeURIComponent(
-        //   JSON.stringify(movieData.results)
-        // );
-        // const tvShowsEncoded = encodeURIComponent(
-        //   JSON.stringify(tvData.results)
-        // );
-
-        console.log({
-          pathname: "/pages/searchResults",
-          query: {
-            query: searchQuery,
-            movies: encodeURIComponent(JSON.stringify(movieData.results)),
-            tvShows: encodeURIComponent(JSON.stringify(tvData.results)),
-          },
-        });
+        console.log("Movies:", movieData.results);
+        console.log("TV Shows:", tvData.results);
 
         router.push(
           `/pages/searchResults?query=${encodeURIComponent(searchQuery)}`
         );
-
-        // router.push(
-        //   `/pages/searchResults?query=${encodeURIComponent(
-        //     searchQuery
-        //   )}&movies=${moviesEncoded}&tvShows=${tvShowsEncoded}`
-        // );
-
-        console.log("Movies:", movieData.results);
-        console.log("TV Shows:", tvData.results);
       } else {
         console.error("Failed to fetch search results");
       }
@@ -150,27 +125,33 @@ const Navbar = () => {
   ];
 
   useEffect(() => {
-    if (!userId) {
-      console.log("No user id found");
+    if (!user) {
+      console.log("No user logged in, setting username to Guest");
+      setUserName("Guest");
       return;
     }
+
     const fetchUserData = async () => {
       try {
+        console.log("Fetching user data for user:", user.uid);
         const response = await fetch(
-          `http://localhost:3001/api/userdata/${userId}`
+          `http://localhost:3001/api/userdata/${user.uid}`
         );
         if (response.ok) {
           const data = await response.json();
-          setUserName(data.display_name);
+          console.log("User data fetched:", data);
+          setUserName(data.display_name || "Guest");
         } else {
+          setUserName("Guest");
           console.error("Failed to fetch user data");
         }
       } catch (error) {
         console.log("An error occurred while fetching", error);
+        setUserName("Guest");
       }
     };
     fetchUserData();
-  }, [userId]);
+  }, [user]);
 
   return (
     <div className="fixed w-screen h-1/6 z-10">

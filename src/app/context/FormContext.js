@@ -5,31 +5,14 @@ const FormContext = createContext();
 
 export const FormProvider = ({ children }) => {
   const [formData, setFormData] = useState({
-    userId: "",
     display_name: "",
     email: "",
     password: "",
     confirmPassword: "",
     language: [],
     genre: [],
+    firebase_uid: "",
   });
-
-  useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    if (storedUserId) {
-      setFormData((prevData) => ({
-        ...prevData,
-        userId: storedUserId,
-      }));
-    }
-  }, []);
-  useEffect(() => {
-    if (formData.userId) {
-      localStorage.setItem("userId", formData.userId);
-    } else {
-      localStorage.removeItem("userId");
-    }
-  }, [formData.userId]);
 
   const handleChange = (e) => {
     setFormData({
@@ -46,27 +29,58 @@ export const FormProvider = ({ children }) => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleUserCreation = async (firebase_uid) => {
+    console.log(
+      "Before setting firebase_uid handleUserCreation log:",
+      formData.firebase_uid
+    );
+    setFormData((prevData) => {
+      const updatedFormData = {
+        ...prevData,
+        firebase_uid: firebase_uid,
+      };
+      console.log(
+        "After setting firebase_uid handleUserCreation log:",
+        updatedFormData.firebase_uid
+      );
+      return updatedFormData;
+    });
+    console.log(
+      "Firebase UID set in formDatahandleUserCreation log:",
+      firebase_uid
+    );
+  };
+
+  const handleSubmit = async (firebase_uid) => {
     try {
+      const user = {
+        display_name: formData.display_name,
+        email: formData.email,
+        password: formData.password,
+        firebase_uid: firebase_uid,
+      };
+
+      console.log("Attempting to create user with data:", user);
+      console.log(
+        "Firebase UID Formdata handlesubmit log:",
+        formData.firebase_uid
+      );
       const response = await fetch("http://localhost:3001/api/userdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(user),
       });
-      if (response.ok) {
-        const result = await response.json();
-        console.log("The form has been submitted");
-        console.log(result);
-        if (result && result.length > 0 && result[0].id) {
-          updateFormData({ userId: result[0].id });
-        }
-      } else {
-        console.error("failed to submit the form");
+
+      if (!response.ok) {
+        throw new Error(`Failed to create user: ${response.statusText}`);
       }
+
+      const result = await response.json();
+      console.log("User created:", result);
     } catch (error) {
-      console.error("an error has occured", error);
+      console.error("An error has occurred", error);
     }
   };
 
@@ -77,6 +91,8 @@ export const FormProvider = ({ children }) => {
         setFormData,
         handleChange,
         handleSubmit,
+        updateFormData,
+        handleUserCreation,
       }}
     >
       {children}

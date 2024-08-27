@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import Navbar from "../../components/navbar/navbar";
 import { Fjalla_One } from "next/font/google";
+import Image from "next/image";
 
 const Fjalla = Fjalla_One({
   weight: "400",
@@ -11,8 +11,21 @@ const Fjalla = Fjalla_One({
 const Favourites = () => {
   return (
     <div className="w-screen h-screen ">
-      <div className="h-1/6">
-        <Navbar />
+      <div className="h-32  flex items-center justify-center ">
+        <Image
+          className=""
+          src="/Logo2.png"
+          alt="logo"
+          width={75}
+          height={150}
+        />
+        <Image
+          className=""
+          src="/logoName.png"
+          alt="logo"
+          width={325}
+          height={150}
+        />
       </div>
       <div className="w-full h-5/6 flex">
         <div className="w-2/3 ">

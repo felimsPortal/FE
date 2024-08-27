@@ -1,13 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Footer from "../../components/footer/footer";
 import Languages from "../../components/lanuages/languages";
 import Genres from "../../components/genres/genres";
-import { useFormContext } from "../../context/FormContext";
 import { Fjalla_One } from "next/font/google";
 import { ToastContainer, Zoom } from "react-toastify";
-import { useRouter } from "next/navigation";
 
 const Fjalla = Fjalla_One({
   weight: "400",
@@ -18,9 +16,6 @@ const Profile = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
-
-  const { formData } = useFormContext();
-  const router = useRouter();
 
   const handleGenreChange = (newSelectedGenres) => {
     console.log("Updated Genres State:", newSelectedGenres);
@@ -33,37 +28,51 @@ const Profile = () => {
   const handlePreviousClick = () => {
     setCurrentSection((prevSection) => prevSection - 1);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("formData:", formData);
-    console.log("Selected Languages:", selectedLanguages);
-    console.log("Selected Genres:", selectedGenres);
+    const storedFormData = localStorage.getItem("formData");
+    const formData = storedFormData ? JSON.parse(storedFormData) : null;
 
-    try {
-      const response = await fetch(
-        `http://localhost:3001/api/movies/${formData.userId}/movies`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            languages: selectedLanguages,
-            genres: selectedGenres,
-          }),
-        }
+    if (formData) {
+      const updatedFormData = {
+        ...formData,
+        language: selectedLanguages,
+        genre: selectedGenres,
+      };
+      localStorage.setItem("formData", JSON.stringify(updatedFormData));
+      console.log(
+        "Updated formData with languages and genres:",
+        updatedFormData
       );
-      console.log("Response:", response);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
 
-      const result = await response.json();
-      router.push("/pages/portalUnsubscribed");
-    } catch (error) {
-      console.error("Error saving movie preferences:", error);
+      try {
+        const response = await fetch(
+          `http://localhost:3001/api/movies/${updatedFormData.firebase_uid}/movies`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              display_name: updatedFormData.display_name,
+              languages: updatedFormData.language,
+              genres: updatedFormData.genre,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to save movie profile");
+        }
+
+        const result = await response.json();
+        console.log("Movie profile saved:", result);
+      } catch (error) {
+        console.error("Error saving movie profile:", error);
+      }
+    } else {
+      console.log("No formData found in localStorage.");
     }
   };
 

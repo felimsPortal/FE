@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useFormContext } from "../../context/FormContext";
 import Image from "next/image";
 import Navbar from "../../components/navbar/navbar";
 import Footer from "../../components/footer/footer";
@@ -18,9 +17,6 @@ const Poiret = Poiret_One({
 
 const Portal = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-
-  const { formData } = useFormContext();
-  const { userId } = formData;
 
   useEffect(() => {
     const handleScroll = () => {

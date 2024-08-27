@@ -8,12 +8,12 @@ export const MovieProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
 
-  const fetchMovies = useCallback(async (userId, pageNumber) => {
+  const fetchMovies = useCallback(async (firebase_uid, pageNumber) => {
     console.log(
-      `Fetching movies for userId: ${userId}, pageNumber: ${pageNumber}`
+      `Fetching movies for firebase_uid: ${firebase_uid}, pageNumber: ${pageNumber}`
     );
     try {
-      const url = `http://localhost:3001/api/movies/${userId}`;
+      const url = `http://localhost:3001/api/movies/${firebase_uid}`;
       const response = await axios.get(url, {
         params: {
           page: pageNumber,

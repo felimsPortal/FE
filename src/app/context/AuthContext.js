@@ -17,7 +17,8 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState();
 
   const actionCodeSettings = {
-    url: "https://fe-inky-pi.vercel.app/pages/welcome",
+    // url: "https://fe-inky-pi.vercel.app/pages/welcome",
+    url: "http://localhost:3000/pages/welcome",
     handleCodeInApp: true,
     iosBundleID: "com.example.ios",
     androidPackageName: "com.example.android",
@@ -45,17 +46,28 @@ export const AuthContextProvider = ({ children }) => {
       });
   };
 
-  const newUser = (email, password) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        setUser(userCredential.user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-      });
+  const newUser = async (email, password) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(userCredential.user);
+      return userCredential;
+    } catch (error) {
+      console.error("Error creating new user:", error);
+      throw error;
+    }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      console.log("Auth State Changed, user set:", currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const signIn = (email, password) => {
     return new Promise((resolve, reject) => {
