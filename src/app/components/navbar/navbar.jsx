@@ -77,15 +77,22 @@ const Navbar = () => {
         const movieData = await movieResponse.json();
         const tvData = await tvResponse.json();
 
+        console.log("Movies fetched:", movieData);
+        console.log("TV Shows fetched:", tvData);
+
         localStorage.setItem("movies", JSON.stringify(movieData.results));
         localStorage.setItem("tvShows", JSON.stringify(tvData.results));
-
-        console.log("Movies:", movieData.results);
-        console.log("TV Shows:", tvData.results);
-
-        router.push(
-          `/pages/searchResults?query=${encodeURIComponent(searchQuery)}`
+        console.log(
+          "Movies saved to localStorage:",
+          JSON.parse(localStorage.getItem("movies"))
         );
+        console.log(
+          "TV Shows saved to localStorage:",
+          JSON.parse(localStorage.getItem("tvShows"))
+        );
+        window.location.href = `/pages/searchResults?query=${encodeURIComponent(
+          searchQuery
+        )}`;
       } else {
         console.error("Failed to fetch search results");
       }

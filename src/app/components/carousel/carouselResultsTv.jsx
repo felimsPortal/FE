@@ -39,31 +39,40 @@ const EmblaCarouselResultsTv = (props) => {
       const tvShowsStored = localStorage.getItem("tvShows");
 
       if (tvShowsStored) {
-        const parsedTvShows = JSON.parse(tvShowsStored);
+        const parsedTvShowsData = JSON.parse(tvShowsStored);
 
-        let allSeasons = [];
+        if (parsedTvShowsData && Array.isArray(parsedTvShowsData.results)) {
+          let allSeasons = [];
 
-        parsedTvShows.forEach((tvShow) => {
-          console.log(`Full TV data:`, tvShow);
-          const genres = getGenreNames(tvShow.genre_ids || []);
-          const languages = getLanguageNames([tvShow.original_language]);
+          parsedTvShowsData.results.forEach((tvShow) => {
+            console.log(`Full TV data:`, tvShow);
+            const genres = getGenreNames(tvShow.genre_ids || []);
+            const languages = getLanguageNames([tvShow.original_language]);
 
-          tvShow.seasons.forEach((season) => {
-            allSeasons.push({
-              title: `${tvShow.title} - ${season.name}`,
-              original_language: languages.join(", "),
-              vote_average: season.vote_average || tvShow.vote_average,
-              release_date: season.air_date || tvShow.release_date,
-              genres: genres,
-              overview: season.overview || tvShow.overview,
-              src: `https://image.tmdb.org/t/p/w500${season.poster_path}`,
-              seasonNumber: season.season_number,
-              episode_count: season.episode_count,
+            // Iterate through each season of the TV show
+            tvShow.seasons.forEach((season) => {
+              allSeasons.push({
+                title: `${tvShow.name} - ${season.name}`,
+                original_language: languages.join(", "),
+                vote_average: season.vote_average || tvShow.vote_average,
+                release_date: season.air_date || tvShow.first_air_date,
+                genres: genres,
+                overview: season.overview || tvShow.overview,
+                src: `https://image.tmdb.org/t/p/w500${season.poster_path}`,
+                seasonNumber: season.season_number,
+                episode_count: season.episode_count,
+              });
             });
           });
-        });
 
-        setCurrentTvShows(allSeasons);
+          setCurrentTvShows(allSeasons);
+        } else {
+          console.error(
+            "TV shows data structure is not as expected:",
+            parsedTvShowsData
+          );
+          setCurrentTvShows([]); // Ensure that the component handles the empty state
+        }
       } else {
         console.log("No TV shows found in localStorage");
       }

@@ -1,47 +1,57 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-const MovieModal = ({ isOpen, onClose, movie }) => {
-  if (!isOpen || !movie) return null;
-  const {
-    title,
-    overview,
-    release_date,
-    vote_average,
-    original_language,
-    poster_path,
-  } = movie;
+const Modal = ({ isOpen, onClose, youtubeTrailerId }) => {
+  if (!isOpen) return null;
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="w-full max-w-4xl black rounded-lg overflow-hidden shadow-xl transform transition-all relative">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute text-white top-6 right-5 hover:text-gray-900 text-3xl font-bold z-10"
+        >
           X
         </button>
-        <h2>{title}</h2>
-        <img
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt={movie.title}
-          className="modal-poster"
-        />
-        <p>{overview}</p>
-        <p>Release Date: {release_date}</p>
-        <p>Vote Average: {vote_average}</p>
-        <p>Original Language: {original_language}</p>
+
+        <div className="p-4">
+          <div
+            className="relative"
+            style={{ paddingBottom: "56.25%", height: 0 }}
+          >
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src={`https://www.youtube.com/embed/${youtubeTrailerId}?autoplay=1`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
       </div>
     </div>
+    // <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    //   <div className="bg-black rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+    //     <div className="flex justify-end p-2">
+    //       <button className="text-black hover:text-gray-700" onClick={onClose}>
+    //         &times; {/* Close button */}
+    //       </button>
+    //     </div>
+    //     <div className="p-4">
+    //       <iframe
+    //         width="640" // Adjust the width here
+    //         height="360" // Adjust the height here
+    //         src={`https://www.youtube.com/embed/${youtubeTrailerId}?autoplay=1`}
+    //         title="YouTube video player"
+    //         frameBorder="0"
+    //         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    //         allowFullScreen
+    //       />
+    //     </div>
+    //   </div>
+    // </div>
   );
 };
-MovieModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  movie: PropTypes.shape({
-    title: PropTypes.string,
-    overview: PropTypes.string,
-    release_date: PropTypes.string,
-    vote_average: PropTypes.number,
-    original_language: PropTypes.string,
-    poster_path: PropTypes.string,
-  }),
-};
 
-export default MovieModal;
+export default Modal;

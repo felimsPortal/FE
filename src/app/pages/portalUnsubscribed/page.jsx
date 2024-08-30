@@ -4,6 +4,9 @@ import Image from "next/image";
 import Navbar from "../../components/navbar/navbar";
 import Footer from "../../components/footer/footer";
 import { Poiret_One, Odibee_Sans } from "next/font/google";
+import EmblaCarousel from "../../components/carousel/carousel";
+import { UserAuth } from "../../context/AuthContext";
+import { useMovies } from "../../context/MovieContext.js";
 
 const Odibee = Odibee_Sans({
   weight: "400",
@@ -17,7 +20,17 @@ const Poiret = Poiret_One({
 
 const Portal = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user } = UserAuth();
+  const firebase_uid = user?.uid;
+  const { totalPages, page, setPage, fetchMovies } = useMovies();
 
+  useEffect(() => {
+    console.log("Firebase UID:", firebase_uid);
+    if (firebase_uid) {
+      fetchMovies(firebase_uid, page);
+    }
+    console.log("fetchMovies called");
+  }, [firebase_uid, page, fetchMovies]);
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -31,6 +44,15 @@ const Portal = () => {
     };
   }, []);
 
+  const loadMoreMovies = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
+
+  if (!firebase_uid) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="w-screen h-screen">
       <div
@@ -95,6 +117,18 @@ const Portal = () => {
         </div>
       </div>
 
+      <div className="w-full h-full p-4">
+        <h1 className="text-2xl font-bold mt-36">Movies</h1>
+        <EmblaCarousel firebase_uid={firebase_uid} pageNumber={page} />
+        {page < totalPages && (
+          <button
+            onClick={loadMoreMovies}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+          >
+            Load More
+          </button>
+        )}
+      </div>
       {/* continue watching */}
       <div className="w-screen h-screen bg-black mt- pr-5">
         <div
@@ -102,65 +136,6 @@ const Portal = () => {
         >
           CONTINUE WATCHING
         </div>
-
-        <div
-          className={`w-full flex flex-col text-7xl  h-1/4 bg-blue-500 mt-16 ml-10 ${Odibee.className}`}
-        >
-          FOR YOU
-          {/* <h1>User Data for ID: {userId}</h1>
-          <div>
-            <h2>User Details:</h2>
-            <p>Name: {userData?.display_name}</p>
-            <p>Email: {userData?.email}</p>
-            <h2>Selected Languages:</h2>
-            <ul>
-              {userData?.languages && Array.isArray(userData.languages) ? (
-                userData.languages.map((language, index) => (
-                  <li key={index}>{language}</li>
-                ))
-              ) : (
-                <li>No languages selected.</li>
-              )}
-            </ul>
-            <h2>Selected Genres:</h2>
-            <ul>
-              {userData?.genres && Array.isArray(userData.genres) ? (
-                userData.genres.map((genre, index) => (
-                  <li key={index}>{genre}</li>
-                ))
-              ) : (
-                <li>No genres selected.</li>
-              )}
-            </ul>
-            <div>
-              <h2>Movies:</h2>
-              <ul>
-                {movies.length > 0 ? (
-                  movies.map((movie) => (
-                    <li key={movie.id}>
-                      <h3>{movie.title}</h3>
-                      {movie.poster_path && (
-                        <img src={movie.poster_path} alt={movie.title} />
-                      )}
-                    </li>
-                  ))
-                ) : (
-                  <li>No movies found.</li>
-                )}
-              </ul>
-            </div>
-          </div> */}
-        </div>
-        {/* <div
-          className={`w-full flex flex-col text-7xl h-1/4 bg-purple-500  mt-16 ml-10 ${Odibee.className}`}
-        >
-          MOST WATCHED
-        </div>
-        <div
-          className={`w-full flex flex-col text-7xl h-1/4 bg-purple-500  mt-16 ml-10 ${Odibee.className}`}
-        >
-          RECENTLY ADDED
-        </div> */}
         <Footer />
       </div>
     </div>
