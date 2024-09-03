@@ -11,22 +11,25 @@ const Fjalla = Fjalla_One({
 const EmailSent = () => {
   return (
     <div className="relative h-screen w-screen">
-      <div className="h-32  flex items-center justify-center ">
-        <Image
-          className=""
-          src="/Logo2.png"
-          alt="logo"
-          width={75}
-          height={150}
-        />
-        <Image
-          className=""
-          src="/logoName.png"
-          alt="logo"
-          width={325}
-          height={150}
-        />
+      <div className="w-full h-32 flex items-center justify-center ">
+        <div className="h-32 w-1/4 pt-4 flex items-center justify-between">
+          <Image
+            className=""
+            src="/Logo2.png"
+            alt="logo"
+            width={75}
+            height={150}
+          />
+          <Image
+            className=""
+            src="/logoName.png"
+            alt="logo"
+            width={325}
+            height={150}
+          />
+        </div>
       </div>
+      <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0" />
       <div className=" h-5/6 w-full flex justify-center items-center ">
         <div className="absolute w-1/2 h-1/2 bg-green-900 blur-3xl rounded-tl-3xl rounded-br-3xl mt-24"></div>
         <div className="absolute w-2/3 h-1/2 font-bold text-3xl text-center text-white tracking-wide  flex flex-col items-center justify-center z-10 ">

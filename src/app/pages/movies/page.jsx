@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
-import EmblaCarousel from "../../components/carousel/carousel";
+import EmblaCarousel from "../../components/carousel/carouselForYou";
 import { UserAuth } from "../../context/AuthContext";
 import { useMovies } from "../../context/MovieContext.js";
 

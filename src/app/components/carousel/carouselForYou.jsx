@@ -2,8 +2,8 @@
 
 import React, { useEffect } from "react";
 import Image from "next/image";
-import { getGenreNames } from "../../components/genres/genres";
-import { getLanguageNames } from "../../components/lanuages/languages";
+import { getGenreNames } from "../genres/genres";
+import { getLanguageNames } from "../lanuages/languages";
 import { DotButton, useDotButton } from "./emblaCarouselDotButton";
 import {
   PrevButton,

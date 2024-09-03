@@ -31,26 +31,6 @@ const Modal = ({ isOpen, onClose, youtubeTrailerId }) => {
         </div>
       </div>
     </div>
-    // <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    //   <div className="bg-black rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-    //     <div className="flex justify-end p-2">
-    //       <button className="text-black hover:text-gray-700" onClick={onClose}>
-    //         &times; {/* Close button */}
-    //       </button>
-    //     </div>
-    //     <div className="p-4">
-    //       <iframe
-    //         width="640" // Adjust the width here
-    //         height="360" // Adjust the height here
-    //         src={`https://www.youtube.com/embed/${youtubeTrailerId}?autoplay=1`}
-    //         title="YouTube video player"
-    //         frameBorder="0"
-    //         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    //         allowFullScreen
-    //       />
-    //     </div>
-    //   </div>
-    // </div>
   );
 };
 

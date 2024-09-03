@@ -171,7 +171,7 @@ const Navbar = () => {
     <div className="fixed w-screen h-1/6 z-10">
       {user ? (
         <div className="fixed w-screen h-32   pb-1 flex items-center px-12 ">
-          <div className="w-1/5 h-full flex items-end justify-between px-4 ">
+          <div className="w-1/5 h-full flex items-end justify-between px-10">
             <Image
               className="mb-1"
               src="/Logo2.png"
@@ -218,7 +218,7 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="w-1/5 h-full flex justify-between items-end px-24">
+          <div className="w-1/5 h-full flex justify-between items-end px-28  ">
             <div className="relative flex items-center justify-center">
               <button className="">
                 <Image

@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { getGenreNames } from "../genres/genres";
-import { getLanguageNames } from "../lanuages/languages";
-import { DotButton, useDotButton } from "./emblaCarouselDotButton";
+import { getGenreNames } from "../genres/genres.jsx";
+import { getLanguageNames } from "../lanuages/languages.jsx";
+import { DotButton, useDotButton } from "./emblaCarouselDotButton.jsx";
 import {
   PrevButton,
   NextButton,
   usePrevNextButtons,
-} from "./emblaCarouselArrowButtons";
+} from "./emblaCarouselArrowButtons.jsx";
 import useEmblaCarousel from "embla-carousel-react";
 import { FcLike } from "react-icons/fc";
 import { FcBookmark } from "react-icons/fc";
@@ -120,7 +120,7 @@ const EmblaCarouselResults = (props) => {
 
           return {
             tmdbId,
-            src: `https://image.tmdb.org/t/p/w500${movie.poster_path}`, // Use poster path directly from stored data
+            src: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
             title,
             originalLanguage,
             overview,

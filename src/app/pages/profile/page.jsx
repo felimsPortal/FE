@@ -83,12 +83,13 @@ const Profile = () => {
     <form onSubmit={handleSubmit}>
       <div className="w-screen h-screen">
         <div className="w-full h-5/6 flex flex-col items-center justify-center ">
-          <div className="border-b-4 border-red-900 w-full h-full flex item justify-center py-5">
+          <div className="w-full h-full flex item justify-center py-5">
             <div
               className={`h-full w-full flex item justify-center ${Fjalla.className}`}
             >
               <h1 className="text-5xl font-bold mt-5 tracking-widest ">
                 Create Your Felim List
+                <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0 mt-3" />
               </h1>
             </div>
           </div>

@@ -8,6 +8,25 @@ export const MovieProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
+  const [preferredLanguage, setPreferredLanguage] = useState(null);
+
+  const [movieHero, setMovieHero] = useState([]);
+  const [heroTotalPages, setHeroTotalPages] = useState(0);
+
+  const fetchUserProfile = async (firebaseUid) => {
+    try {
+      const response = await axios.get(`/api/userdata/${firebaseUid}`);
+      console.log("User profile data:", response.data);
+
+      const { results } = response.data;
+      return {
+        moviesAndTvShows: results,
+      };
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      return "en"; // Fallback to "en" in case of error
+    }
+  };
 
   const fetchMovies = useCallback(
     async (firebase_uid, pageNumber = page) => {
@@ -31,7 +50,11 @@ export const MovieProvider = ({ children }) => {
         });
         console.log("API Response:", response.data);
 
-        const { movies: movieData, total_pages } = response.data;
+        const {
+          movies: movieData,
+          total_pages,
+          preferred_language,
+        } = response.data;
         console.log("Processed movie data:", movieData);
 
         setMovies((prevMovies) => {
@@ -42,6 +65,7 @@ export const MovieProvider = ({ children }) => {
           return [...prevMovies, ...newMovies];
         });
         setTotalPages(total_pages);
+        setPreferredLanguage(preferred_language);
       } catch (error) {
         console.error("Error fetching movies:", error);
       }
@@ -49,9 +73,44 @@ export const MovieProvider = ({ children }) => {
     [page]
   );
 
+  const fetchMoviesByLanguage = useCallback(
+    async (firebaseUid, pageNumber = 1) => {
+      console.log(
+        `Fetching movies for firebaseUid: ${firebaseUid}, page: ${pageNumber}`
+      );
+
+      try {
+        const url = `http://localhost:3001/api/movies/language/${firebaseUid}`;
+        const response = await axios.get(url, {
+          params: { page: pageNumber },
+        });
+
+        console.log("Movies fetched by language:", response.data.movies);
+        setMovieHero(response.data.movies);
+        console.log("MovieHero updated:", response.data.movies); // Log after setting movieHero
+
+        setHeroTotalPages(response.data.total_pages);
+      } catch (error) {
+        console.error("Error fetching movies by language:", error);
+      }
+    },
+    []
+  );
+
   return (
     <MovieContext.Provider
-      value={{ movies, setPage, totalPages, page, fetchMovies }}
+      value={{
+        movies,
+        movieHero,
+        setPage,
+        heroTotalPages,
+        totalPages,
+        page,
+        fetchMovies,
+        fetchMoviesByLanguage,
+        preferredLanguage,
+        fetchUserProfile,
+      }}
     >
       {children}
     </MovieContext.Provider>

@@ -6,6 +6,7 @@ import { UserAuth } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect } from "react";
+import Footer from "@/app/components/footer/footer";
 
 const SignUp = () => {
   const { formData, handleChange, handleSubmit, handleUserCreation } =
@@ -81,28 +82,31 @@ const SignUp = () => {
   };
 
   return (
-    <form onSubmit={newUserSignUp}>
-      <div className="h-32 pt-10 flex items-center justify-center">
-        <Image
-          className=""
-          src="/Logo2.png"
-          alt="logo"
-          width={75}
-          height={150}
-        />
-        <Image
-          className=""
-          src="/logoName.png"
-          alt="logo"
-          width={325}
-          height={150}
-        />
+    <form onSubmit={newUserSignUp} className="w-screen h-screen">
+      <div className="w-full h-32 flex items-center justify-center ">
+        <div className="h-32 w-1/4 pt-4 flex items-center justify-between">
+          <Image
+            className=""
+            src="/Logo2.png"
+            alt="logo"
+            width={75}
+            height={150}
+          />
+          <Image
+            className=""
+            src="/logoName.png"
+            alt="logo"
+            width={325}
+            height={150}
+          />
+        </div>
       </div>
-      <div className="relative w-screen h-screen flex items-center justify-center ">
-        <div className="w-full h-4/6 flex items-center justify-center mt-24 ">
+      <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0" />
+      <div className="relative w-screen h-5/6 flex items-center justify-center ">
+        <div className="w-full h-full flex items-center justify-center">
           <div className="">
             <Image
-              className="rounded-md opacity-15 mt-16"
+              className="rounded-md opacity-15"
               src="/signUpCollage2.png"
               alt="landing page img"
               width={1440}
@@ -172,6 +176,7 @@ const SignUp = () => {
           <ToastContainer />
         </div>
       </div>
+      <Footer />
     </form>
   );
 };

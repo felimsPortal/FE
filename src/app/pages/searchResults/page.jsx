@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 import Navbar from "../../components/navbar/navbar";
-import EmblaCarouselResults from "../../components/carousel/CarouselResults";
+import EmblaCarouselResults from "../../components/carousel/carouselResultsMovie";
 import EmblaCarouselResultsTv from "../../components/carousel/carouselResultsTv";
 
 const SearchResults = () => {

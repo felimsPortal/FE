@@ -75,22 +75,25 @@ const Home = () => {
 
   return (
     <div className="relative w-screen h-screen">
-      <div className="h-32 pt-10 flex items-center justify-center">
-        <Image
-          className=""
-          src="/Logo2.png"
-          alt="logo"
-          width={75}
-          height={150}
-        />
-        <Image
-          className=""
-          src="/logoName.png"
-          alt="logo"
-          width={325}
-          height={150}
-        />
+      <div className="w-full h-32 flex items-center justify-center ">
+        <div className="h-32 w-1/4 pt-4 flex items-center justify-between">
+          <Image
+            className=""
+            src="/Logo2.png"
+            alt="logo"
+            width={75}
+            height={150}
+          />
+          <Image
+            className=""
+            src="/logoName.png"
+            alt="logo"
+            width={325}
+            height={150}
+          />
+        </div>
       </div>
+      <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0" />
       <div className=" w-full h-5/6 flex items-center">
         <div className="w-full">
           <Image
@@ -104,7 +107,7 @@ const Home = () => {
         </div>
         <div className="relative w-1/4 h-full flex items-center justify-center">
           <div className="transform -rotate-90 border-t-[380px] border-t-red-700 border-l-[256px] border-l-transparent border-r-[256px] border-r-transparent opacity-45   "></div>
-          <div className=" w-72 h-2/3 bg-green-900  absolute rounded-tl-3xl rounded-br-3xl">
+          <div className=" w-72 h-3/4 bg-green-900  absolute rounded-tl-3xl rounded-br-3xl">
             <div className="w-full flex justify-center bg-pink-6">
               <h1 className="mt-8 text-gray-100 text-2xl">Sign In</h1>
             </div>

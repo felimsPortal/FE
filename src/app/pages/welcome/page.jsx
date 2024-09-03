@@ -10,22 +10,25 @@ const Fjalla = Fjalla_One({
 const Welcome = () => {
   return (
     <div className="w-screen h-screen">
-      <div className="h-32  flex items-center justify-center ">
-        <Image
-          className=""
-          src="/Logo2.png"
-          alt="logo"
-          width={75}
-          height={150}
-        />
-        <Image
-          className=""
-          src="/logoName.png"
-          alt="logo"
-          width={325}
-          height={150}
-        />
+      <div className="w-full h-32 flex items-center justify-center ">
+        <div className="h-32 w-1/4 pt-4 flex items-center justify-between">
+          <Image
+            className=""
+            src="/Logo2.png"
+            alt="logo"
+            width={75}
+            height={150}
+          />
+          <Image
+            className=""
+            src="/logoName.png"
+            alt="logo"
+            width={325}
+            height={150}
+          />
+        </div>
       </div>
+      <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0" />
       <div className="relative w-full h-5/6 flex items-center justify-center">
         <Image
           className="opacity-20"
@@ -44,8 +47,8 @@ const Welcome = () => {
               Watch your favourite Felims Online in HD
             </h1>
             <h1 className="text-2xl text-center mt-6 tracking-wider">
-              Subscriptions are treated as donations for the Palestine Children
-              Fund
+              50% of your subscriptions are treated as donations supporting
+              families listed in Project Olive Branch
             </h1>
           </div>
           <Link href="/pages/favourites">

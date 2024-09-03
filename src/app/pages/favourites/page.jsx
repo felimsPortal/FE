@@ -11,22 +11,25 @@ const Fjalla = Fjalla_One({
 const Favourites = () => {
   return (
     <div className="w-screen h-screen ">
-      <div className="h-32  flex items-center justify-center ">
-        <Image
-          className=""
-          src="/Logo2.png"
-          alt="logo"
-          width={75}
-          height={150}
-        />
-        <Image
-          className=""
-          src="/logoName.png"
-          alt="logo"
-          width={325}
-          height={150}
-        />
+      <div className="w-full h-32 flex items-center justify-center ">
+        <div className="h-32 w-1/4 pt-4 flex items-center justify-between">
+          <Image
+            className=""
+            src="/Logo2.png"
+            alt="logo"
+            width={75}
+            height={150}
+          />
+          <Image
+            className=""
+            src="/logoName.png"
+            alt="logo"
+            width={325}
+            height={150}
+          />
+        </div>
       </div>
+      <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0" />
       <div className="w-full h-5/6 flex">
         <div className="w-2/3 ">
           <video className="" src="/navigation.mp4" autoPlay loop muted />

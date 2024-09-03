@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Navbar from "../../components/navbar/navbar";
 import Footer from "../../components/footer/footer";
-import { Poiret_One, Odibee_Sans } from "next/font/google";
-import EmblaCarousel from "../../components/carousel/carousel";
+import { Odibee_Sans } from "next/font/google";
+import EmblaCarousel from "../../components/carousel/carouselForYou";
+import EmblaCarouselHero from "../../components/carousel/carouselHero";
 import { UserAuth } from "../../context/AuthContext";
 import { useMovies } from "../../context/MovieContext.js";
 
@@ -13,24 +13,37 @@ const Odibee = Odibee_Sans({
   subsets: ["latin"],
 });
 
-const Poiret = Poiret_One({
-  weight: "400",
-  subsets: ["latin"],
-});
-
 const Portal = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const { user } = UserAuth();
-  const firebase_uid = user?.uid;
-  const { totalPages, page, setPage, fetchMovies } = useMovies();
+  const firebaseUid = user?.uid;
+
+  const { totalPages, page, setPage, fetchMovies, fetchMoviesByLanguage } =
+    useMovies();
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [preferredLanguage, setPreferredLanguage] = useState(null);
 
   useEffect(() => {
-    console.log("Firebase UID:", firebase_uid);
-    if (firebase_uid) {
-      fetchMovies(firebase_uid, page);
+    if (!firebaseUid) {
+      console.log("Waiting for Firebase UID...");
+      return; // Exit early if firebaseUid is not available
     }
-    console.log("fetchMovies called");
-  }, [firebase_uid, page, fetchMovies]);
+
+    const loadUserData = async () => {
+      try {
+        console.log("Fetching user data for firebaseUid:", firebaseUid);
+
+        fetchMoviesByLanguage(firebaseUid, page); // Fetch movies by language
+
+        fetchMovies(firebaseUid, page); // Fetch movies by other preferences
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    loadUserData();
+  }, [firebaseUid, page, fetchMovies, fetchMoviesByLanguage]);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -50,7 +63,7 @@ const Portal = () => {
     }
   };
 
-  if (!firebase_uid) {
+  if (!firebaseUid) {
     return <div>Loading...</div>;
   }
   return (
@@ -70,56 +83,15 @@ const Portal = () => {
 
       {/* Hero Section */}
 
-      <div className="relative w-full h-5/6 flex items-center ">
-        <div className=" w-full h-full  flex justify-center px-10 mt-20">
-          <video
-            className="w-full h-5/6 object-cover rounded-3xl"
-            src="/homePage.mp4"
-            autoPlay
-            loop
-            muted
-            controls
-          />
-          {/* Text Overlay */}
-          <div className="absolute w-5/6 h-full bg-yellow-500 ">
-            <div className=" w-1/3 h-2/3 flex flex-col justify-center mt-24">
-              <h1
-                className={`text-7xl font-extrabold text-white ${Poiret.className}`}
-              >
-                MOVIE TITLE
-              </h1>
-              <p className="mt-5 text-white">
-                Synopsis: Lorem Ipsum is simply dummy text of the printing and
-                typesetting industry. Lorem Ipsum has been the industry standard
-                dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and
-              </p>
-              <div className="flex items-center mt-5 justify-center">
-                <Image
-                  width={55}
-                  height={40}
-                  loading="lazy"
-                  className="h-10"
-                  src="/4k.png"
-                  alt="4K"
-                />
-                <Image
-                  width={375}
-                  height={100}
-                  loading="lazy"
-                  className=" ml-5 mt-10"
-                  src="/details.png"
-                  alt="details"
-                />
-              </div>
-            </div>
-          </div>
+      <div className="relative w-full h-full flex items-center ">
+        <div className="relative w-full h-full flex items-center bg-pink-500">
+          <EmblaCarouselHero selectedLanguage={preferredLanguage} />
         </div>
       </div>
 
       <div className="w-full h-full p-4">
         <h1 className="text-2xl font-bold mt-36">Movies</h1>
-        <EmblaCarousel firebase_uid={firebase_uid} pageNumber={page} />
+        <EmblaCarousel firebase_uid={firebaseUid} pageNumber={page} />
         {page < totalPages && (
           <button
             onClick={loadMoreMovies}
