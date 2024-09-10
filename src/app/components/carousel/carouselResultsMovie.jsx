@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { getGenreNames } from "../genres/genres.jsx";
-import { getLanguageNames } from "../lanuages/languages.jsx";
 import { DotButton, useDotButton } from "./emblaCarouselDotButton.jsx";
 import {
   PrevButton,

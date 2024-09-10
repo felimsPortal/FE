@@ -8,6 +8,7 @@ import { GrContact } from "react-icons/gr";
 import { CiSettings } from "react-icons/ci";
 import { MdOutlinePayments } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const Odibee = Odibee_Sans({
   weight: "400",
@@ -20,20 +21,21 @@ const OswaldFont = Oswald({
 });
 
 const Navbar = () => {
+  const { user, logOut } = UserAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState("");
 
-  const { user, logOut } = UserAuth();
-  const router = useRouter();
-
   const navLinks = [
     { name: "Home", link: "/pages/portalUnsubscribed" },
     { name: "TV Shows", link: "/pages/tvShows" },
     { name: "Movies", link: "/pages/movies" },
+    { name: "Documentaries", link: "/pages/documentaries" },
     { name: "Bookmarks", link: "/pages/bookmarks" },
-    { name: "Documentaries", href: "#" },
   ];
 
   const handleDropDownToggle = () => {
@@ -167,6 +169,7 @@ const Navbar = () => {
 
     fetchUserData();
   }, [user]);
+
   return (
     <div className="fixed w-screen h-1/6 z-10">
       {user ? (
@@ -187,13 +190,46 @@ const Navbar = () => {
           <div className="w-3/5 h-full flex items-end justify-evenly ">
             {navLinks.map((link, index) => (
               <a
-                className="transform transition-transform duration-300 hover:scale-150 cursor-pointer"
+                className={`transform transition-transform duration-300 hover:scale-150 cursor-pointer ${
+                  pathname === link.link ? "underline-red" : ""
+                }`}
                 key={index}
                 href={link.link}
               >
                 {link.name}
               </a>
             ))}
+
+            <style jsx>{`
+              .underline-red {
+                border-bottom: 2px solid red;
+              }
+            `}</style>
+
+            <style jsx>{`
+              .underline-red {
+                border-bottom: 2px solid green;
+              }
+            `}</style>
+
+            {/* {navLinks.map((link, index) => (
+              
+              <a
+                className={`transform transition-transform duration-300 hover:scale-150 cursor-pointer ${
+                  router.pathname === link.link ? "underline-red" : ""
+                }`}
+                key={index}
+                href={link.link}
+              >
+                {link.name}
+              </a>
+            ))} */}
+
+            <style jsx>{`
+              .underline-red {
+                border-bottom: 2px solid red;
+              }
+            `}</style>
             {isSearching ? (
               <div className="">
                 <form onSubmit={handleSearchSubmit}>

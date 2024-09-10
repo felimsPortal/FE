@@ -5,7 +5,7 @@ const Modal = ({ isOpen, onClose, youtubeTrailerId }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-4xl black rounded-lg overflow-hidden shadow-xl transform transition-all relative">
+      <div className="w-full max-w-7xl  black rounded-lg overflow-hidden shadow-xl transform transition-all relative">
         {/* Close Button */}
         <button
           onClick={onClose}

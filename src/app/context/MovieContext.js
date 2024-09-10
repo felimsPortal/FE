@@ -6,10 +6,10 @@ const MovieContext = createContext();
 
 export const MovieProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
+  const [tvShows, setTvShows] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
   const [preferredLanguage, setPreferredLanguage] = useState(null);
-
   const [movieHero, setMovieHero] = useState([]);
   const [heroTotalPages, setHeroTotalPages] = useState(0);
 
@@ -73,6 +73,33 @@ export const MovieProvider = ({ children }) => {
     [page]
   );
 
+  const fetchLatestTVShows = async (pageNumber = 1) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3001/api/movies/latest-tv", // Call your route
+        {
+          params: { page: pageNumber },
+        }
+      );
+
+      // Update the state without duplicating the first set of TV shows
+      setTvShows((prevTvShows) => {
+        // Filter out duplicates by checking if the show is already in the state
+        const newTvShows = response.data.tvShows.filter(
+          (newShow) =>
+            !prevTvShows.some((prevShow) => prevShow.id === newShow.id)
+        );
+
+        return [...prevTvShows, ...newTvShows];
+      });
+
+      setTotalPages(response.data.total_pages);
+      console.log("response with TV shows data", response.data.tvShows);
+    } catch (error) {
+      console.error("Error fetching latest TV shows:", error);
+    }
+  };
+
   const fetchMoviesByLanguage = useCallback(
     async (firebaseUid, pageNumber = 1) => {
       console.log(
@@ -97,19 +124,34 @@ export const MovieProvider = ({ children }) => {
     []
   );
 
+  const fetchTrailerForTvShow = async (tmdbId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/tmdb/tv/${tmdbId}/trailer`
+      );
+      return response.data.youtubeTrailerId; // Return the trailer ID
+    } catch (error) {
+      console.error(`Error fetching trailer for TV show ${tmdbId}:`, error);
+      return null; // Return null if there's an error
+    }
+  };
+
   return (
     <MovieContext.Provider
       value={{
         movies,
+        tvShows,
         movieHero,
-        setPage,
         heroTotalPages,
         totalPages,
         page,
-        fetchMovies,
-        fetchMoviesByLanguage,
         preferredLanguage,
+        setPage,
+        fetchMovies,
+        fetchLatestTVShows,
+        fetchMoviesByLanguage,
         fetchUserProfile,
+        fetchTrailerForTvShow,
       }}
     >
       {children}

@@ -57,11 +57,11 @@ const Portal = () => {
     };
   }, []);
 
-  const loadMoreMovies = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
-  };
+  // const loadMoreMovies = () => {
+  //   if (page < totalPages) {
+  //     setPage(page + 1);
+  //   }
+  // };
 
   if (!firebaseUid) {
     return <div>Loading...</div>;
@@ -90,21 +90,25 @@ const Portal = () => {
       </div>
 
       <div className="w-full h-full p-4">
-        <h1 className="text-2xl font-bold mt-36">Movies</h1>
+        <h1
+          className={`text-7xl text-center font-bold mt-24   ${Odibee.className}`}
+        >
+          For You
+        </h1>
         <EmblaCarousel firebase_uid={firebaseUid} pageNumber={page} />
-        {page < totalPages && (
+        {/* {page < totalPages && (
           <button
             onClick={loadMoreMovies}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+            className="mt-8 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
           >
             Load More
           </button>
-        )}
+        )} */}
       </div>
       {/* continue watching */}
       <div className="w-screen h-screen bg-black mt- pr-5">
         <div
-          className={`w-full flex flex-col text-7xl h-1/4 bg-purple-500 mb-5 ml-10 ${Odibee.className}`}
+          className={`w-full flex flex-col text-7xl h-1/4 bg-purple-500 mt-48   ml-10 ${Odibee.className}`}
         >
           CONTINUE WATCHING
         </div>
