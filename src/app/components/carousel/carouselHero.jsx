@@ -4,7 +4,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { useMovies } from "../../context/MovieContext";
 import axios from "axios";
 import { Poiret_One } from "next/font/google";
-import Modal from "../modal/modal.js";
+import Modal from "../modal/modal.jsx";
 import { FcLike } from "react-icons/fc";
 import { FcBookmark } from "react-icons/fc";
 import Image from "next/image";

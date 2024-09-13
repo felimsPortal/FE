@@ -13,7 +13,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { FcLike } from "react-icons/fc";
 import { FcBookmark } from "react-icons/fc";
 import { useMovies } from "../../context/MovieContext.js";
-import Modal from "../modal/modal.js";
+import Modal from "../modal/modal.jsx";
 
 const EmblaCarouselResults = (props) => {
   const { options } = props;

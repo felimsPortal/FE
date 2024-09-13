@@ -1,14 +1,15 @@
 "use client";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { UserAuth } from "../../context/AuthContext";
 import { Odibee_Sans, Oswald } from "next/font/google";
-import { useState, useEffect } from "react";
 import { VscSignOut } from "react-icons/vsc";
 import { GrContact } from "react-icons/gr";
 import { CiSettings } from "react-icons/ci";
 import { MdOutlinePayments } from "react-icons/md";
-import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import { BsFilterSquareFill } from "react-icons/bs";
+import DropdownFilter from "../dropdownFilter/dropdownFilter";
 
 const Odibee = Odibee_Sans({
   weight: "400",
@@ -22,13 +23,16 @@ const OswaldFont = Oswald({
 
 const Navbar = () => {
   const { user, logOut } = UserAuth();
-  const router = useRouter();
   const pathname = usePathname();
+
+  const searchInputRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState("");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const navLinks = [
     { name: "Home", link: "/pages/portalUnsubscribed" },
@@ -37,6 +41,13 @@ const Navbar = () => {
     { name: "Documentaries", link: "/pages/documentaries" },
     { name: "Bookmarks", link: "/pages/bookmarks" },
   ];
+
+  const toggleFilterDropdown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Filter icon clicked");
+    setIsFilterOpen(!isFilterOpen);
+  };
 
   const handleDropDownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -48,10 +59,6 @@ const Navbar = () => {
 
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
-  };
-
-  const handleInputBlur = () => {
-    setIsSearching(false);
   };
 
   const handleSearchSubmit = async (e) => {
@@ -170,6 +177,27 @@ const Navbar = () => {
     fetchUserData();
   }, [user]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If click happens outside search input and outside filter dropdown, close search
+      if (
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target) && // Click outside search input
+        (!dropdownRef.current || !dropdownRef.current.contains(event.target)) // Click outside dropdown (only if dropdown exists)
+      ) {
+        setIsSearching(false); // Collapse search input
+        setIsFilterOpen(false); // Close filter dropdown
+      }
+    };
+
+    // Add event listener for outside clicks
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Clean up event listener on unmount
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="fixed w-screen h-1/6 z-10">
       {user ? (
@@ -211,43 +239,48 @@ const Navbar = () => {
                 border-bottom: 2px solid green;
               }
             `}</style>
-
-            {/* {navLinks.map((link, index) => (
-              
-              <a
-                className={`transform transition-transform duration-300 hover:scale-150 cursor-pointer ${
-                  router.pathname === link.link ? "underline-red" : ""
-                }`}
-                key={index}
-                href={link.link}
-              >
-                {link.name}
-              </a>
-            ))} */}
-
             <style jsx>{`
               .underline-red {
                 border-bottom: 2px solid red;
               }
             `}</style>
+
             {isSearching ? (
-              <div className="">
-                <form onSubmit={handleSearchSubmit}>
+              <div className="relative" ref={searchInputRef}>
+                <form onSubmit={handleSearchSubmit} className="relative">
                   <input
                     type="text"
-                    className="w-56 h-8 border border-gray-300 rounded-3xl text-center focus:outline-none text-black"
-                    placeholder="Search felims"
+                    className="w-full h-12 pl-4 pr-10 border border-gray-300 rounded-xl focus:outline-none text-black"
+                    placeholder="Search films"
                     value={searchQuery}
                     onChange={handleInputChange}
-                    onBlur={handleInputBlur}
                     autoFocus
                   />
+
+                  {/* Filter icon inside the input field */}
+                  <button
+                    type="button"
+                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                    onClick={toggleFilterDropdown} // Attach event handler to the filter icon
+                  >
+                    <BsFilterSquareFill size={40} />
+                  </button>
                 </form>
+
+                {/* Conditionally render the dropdown */}
+                <div className="w-full flex justify-center">
+                  <DropdownFilter
+                    isOpen={isFilterOpen}
+                    closeDropdown={() => setIsFilterOpen(false)}
+                    ref={dropdownRef}
+                  />
+                </div>
               </div>
             ) : (
+              /* If not searching, show a "Search" button to trigger the search input */
               <button
+                onClick={handleSearchClick} // Show search input when clicked
                 className="transform transition-transform duration-300 hover:scale-150"
-                onClick={handleSearchClick}
               >
                 Search
               </button>

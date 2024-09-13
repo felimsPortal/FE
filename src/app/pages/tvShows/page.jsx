@@ -3,12 +3,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/navbar/navbar";
-import Modal from "../../components/modal/modal.js";
+import Modal from "../../components/modal/modal.jsx";
 import { FcLike } from "react-icons/fc";
 import { FcBookmark } from "react-icons/fc";
 import Image from "next/image";
 import { useMovies } from "../../context/MovieContext";
 import { useRouter } from "next/navigation";
+import { Poiret_One } from "next/font/google";
+
+const Poiret = Poiret_One({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 const TVShows = () => {
   const [page, setPage] = useState(1);
@@ -118,8 +124,15 @@ const TVShows = () => {
         <Navbar />
       </div>
 
+      <br />
+      <br />
       <div className="container mx-auto pt-32">
-        <h1 className="text-white text-3xl mb-8">Latest TV Shows</h1>
+        <h1 className={`text-white text-6xl text-center ${Poiret.className}`}>
+          Latest TV Shows
+        </h1>
+        <br />
+        <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0" />
+        <br />
         <div className="grid grid-cols-4 gap-8">
           {tvShows.length > 0 ? (
             tvShows.map((tvShow) => (

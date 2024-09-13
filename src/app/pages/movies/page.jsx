@@ -5,7 +5,7 @@ import Navbar from "../../components/navbar/navbar";
 import { FcLike } from "react-icons/fc";
 import { FcBookmark } from "react-icons/fc";
 import Image from "next/image";
-import Modal from "../../components/modal/modal.js";
+import Modal from "../../components/modal/modal.jsx";
 import { Poiret_One } from "next/font/google";
 
 const Poiret = Poiret_One({

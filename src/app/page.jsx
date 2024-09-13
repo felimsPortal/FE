@@ -76,7 +76,7 @@ const Home = () => {
   return (
     <div className="relative w-screen h-screen">
       <div className="w-full h-32 flex items-center justify-center ">
-        <div className="h-32 w-1/4 pt-4 flex items-center justify-between">
+        <div className="h-32 w-1/4 pt-4 px-6 flex items-center justify-between">
           <Image
             className=""
             src="/Logo2.png"
@@ -94,19 +94,20 @@ const Home = () => {
         </div>
       </div>
       <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0" />
-      <div className=" w-full h-5/6 flex items-center">
-        <div className="w-full">
-          <Image
-            className="rounded-md opacity-50 mb-2"
-            src="/landingPageCollage.png"
-            alt="landing page img"
-            width={1300}
-            height={800}
-            priority={true}
-          />
+      <div className=" w-full h-5/6 flex items-center justify-around ">
+        <div className="w-l/2 max-h-full ">
+          <div className="w-[1400px] h-[730px] flex items-center justify-center relative">
+            <Image
+              className="opacity-80 ml-12"
+              src="/landingPageCollage.png"
+              alt="landing page img"
+              fill
+              style={{ objectFit: "contain" }}
+              priority={true}
+            />
+          </div>
         </div>
-        <div className="relative w-1/4 h-full flex items-center justify-center">
-          <div className="transform -rotate-90 border-t-[380px] border-t-red-700 border-l-[256px] border-l-transparent border-r-[256px] border-r-transparent opacity-45   "></div>
+        <div className="relative w-1/4 h-full flex items-center justify-center ">
           <div className=" w-72 h-3/4 bg-green-900  absolute rounded-tl-3xl rounded-br-3xl">
             <div className="w-full flex justify-center bg-pink-6">
               <h1 className="mt-8 text-gray-100 text-2xl">Sign In</h1>
