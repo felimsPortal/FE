@@ -161,36 +161,71 @@ const EmblaCarouselHero = ({ selectedLanguage }) => {
       clearAutoplay(); // Ensure autoplay is stopped on unmount
     };
   }, [emblaApi, movieHero]);
-
   useEffect(() => {
     const fetchAllDetails = async () => {
-      const detailsPromises = movieHero.map(async (movie) => {
-        try {
-          const response = await axios.get(
-            `http://localhost:3001/api/radar/movies/${movie.id}`
-          );
-          return { [movie.id]: response.data };
-        } catch (error) {
-          console.error(
-            `Error fetching details for movie ID ${movie.id}:`,
-            error
-          );
-          return { [movie.id]: null };
-        }
-      });
+      try {
+        // Map through each movie to create an array of promises
+        const detailsPromises = movieHero.map(async (movie) => {
+          try {
+            const response = await axios.get(
+              `http://localhost:3001/api/radar/movies/${movie.id}`
+            );
+            console.log(`Movie details for ID ${movie.id}:`, response.data); // Log each movie's details
+            return { [movie.id]: response.data };
+          } catch (error) {
+            console.error(
+              `Error fetching details for movie ID ${movie.id}:`,
+              error
+            );
+            return { [movie.id]: null };
+          }
+        });
 
-      const detailsArray = await Promise.all(detailsPromises);
-      const detailsMap = detailsArray.reduce(
-        (acc, details) => ({ ...acc, ...details }),
-        {}
-      );
-      setMovieDetails(detailsMap);
+        // Wait for all promises to resolve
+        const allDetails = await Promise.all(detailsPromises);
+
+        // Merge all results into a single object
+        const mergedDetails = allDetails.reduce((acc, detail) => {
+          return { ...acc, ...detail };
+        }, {});
+
+        setMovieDetails(mergedDetails); // Update state with all movie details
+      } catch (error) {
+        console.error("Error fetching all movie details:", error);
+      }
     };
 
-    if (movieHero.length > 0) {
-      fetchAllDetails();
-    }
+    fetchAllDetails();
   }, [movieHero]);
+  // useEffect(() => {
+  //   const fetchAllDetails = async () => {
+  //     const detailsPromises = movieHero.map(async (movie) => {
+  //       try {
+  //         const response = await axios.get(
+  //           `http://localhost:3001/api/radar/movies/${movie.id}`
+  //         );
+  //         return { [movie.id]: response.data };
+  //       } catch (error) {
+  //         console.error(
+  //           `Error fetching details for movie ID ${movie.id}:`,
+  //           error
+  //         );
+  //         return { [movie.id]: null };
+  //       }
+  //     });
+
+  //     const detailsArray = await Promise.all(detailsPromises);
+  //     const detailsMap = detailsArray.reduce(
+  //       (acc, details) => ({ ...acc, ...details }),
+  //       {}
+  //     );
+  //     setMovieDetails(detailsMap);
+  //   };
+
+  //   if (movieHero.length > 0) {
+  //     fetchAllDetails();
+  //   }
+  // }, [movieHero]);
 
   return (
     <section

@@ -32,7 +32,7 @@ export const getLanguageNames = (languageIds = []) => {
   return languageIds.map((id) => languageMap[id] || "Unknown Language");
 };
 
-const Languages = ({ selectedValues, onChange }) => {
+const Languages = ({ selectedValues = [], onChange }) => {
   const handleChange = (e) => {
     const clickedOption = e.target.value;
     const isSelected = selectedValues.includes(clickedOption);
@@ -43,15 +43,39 @@ const Languages = ({ selectedValues, onChange }) => {
         (value) => value !== clickedOption
       );
     } else {
-      if (selectedValues.length < 3) {
+      // Ensure the selected value is valid before adding
+      if (clickedOption && selectedValues.length < 3) {
         newSelectedValues = [...selectedValues, clickedOption];
       } else {
-        toast.error("Thanks 3 is good for now");
+        toast.error("You can only select up to 3 languages.");
         return;
       }
     }
+
+    console.log("Updated Selected Languages:", newSelectedValues);
     onChange(newSelectedValues);
   };
+  // const handleChange = (e) => {
+  //   e.preventDefault();
+  //   const clickedOption = e.target.value;
+  //   const isSelected = selectedValues.includes(clickedOption);
+
+  //   let newSelectedValues;
+  //   if (isSelected) {
+  //     newSelectedValues = selectedValues.filter(
+  //       (value) => value !== clickedOption
+  //     );
+  //   } else {
+  //     if (selectedValues.length < 3) {
+  //       newSelectedValues = [...selectedValues, clickedOption];
+  //     } else {
+  //       toast.error("Thanks 3 is good for now");
+  //       return;
+  //     }
+  //   }
+  //   console.log("Updated Selected Languages:", newSelectedValues);
+  //   onChange(newSelectedValues);
+  // };
 
   return (
     <div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const Sliders = () => {
+const Sliders = ({ onImdbScoreChange, onReleaseYearChange }) => {
   const leftBackgroundRef = useRef(null); // Ref for the left background (before the min thumb of year)
   const rangeRef = useRef(null); // Ref for the range (between the thumbs of year)
 
@@ -30,6 +30,7 @@ const Sliders = () => {
       }
     } else {
       setYearRange({ min: minVal, max: maxVal });
+      onReleaseYearChange({ min: minVal, max: maxVal });
 
       // Update the progress bar between the two thumbs
       if (rangeRef.current) {
@@ -60,6 +61,7 @@ const Sliders = () => {
       }
     } else {
       setImdbRange({ min: minVal, max: maxVal });
+      onImdbScoreChange({ min: minVal, max: maxVal });
 
       // Update the progress bar between the two IMDB thumbs
       if (imdbRangeRef.current) {

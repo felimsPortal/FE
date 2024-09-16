@@ -196,8 +196,19 @@ const Movies = () => {
                     <p>
                       <strong>Genres:</strong> {movieDetails.genres.join(", ")}
                     </p>
+                    {movieDetails.imdbRating !== "TBD" && (
+                      <p>
+                        <strong>IMDb Rating:</strong> {movieDetails.imdbRating}
+                      </p>
+                    )}
                     <p>
-                      <strong>IMDb Rating:</strong> {movieDetails.imdbRating}
+                      <strong>General Rating:</strong> {movieDetails.tmdbRating}
+                    </p>
+                    <p>
+                      <strong>Run Time - mins:</strong> {movieDetails.runtime}
+                    </p>
+                    <p>
+                      <strong>Cert:</strong> {movieDetails.certification}
                     </p>
                     <br />
                     <hr />

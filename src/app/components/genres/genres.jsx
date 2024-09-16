@@ -28,8 +28,9 @@ export const getGenreNames = (genreIds = []) => {
   return genreIds.map((id) => genreMap[id] || "Unknown Genre");
 };
 
-const Genres = ({ selectedValues, onChange }) => {
+const Genres = ({ selectedValues = [], onChange }) => {
   const handleChange = (e) => {
+    e.preventDefault();
     const clickedOption = e.target.value;
     const isSelected = selectedValues.includes(clickedOption);
 
@@ -46,6 +47,7 @@ const Genres = ({ selectedValues, onChange }) => {
         return;
       }
     }
+    console.log("Updated Selected Genres:", newSelectedValues);
     onChange(newSelectedValues);
   };
 

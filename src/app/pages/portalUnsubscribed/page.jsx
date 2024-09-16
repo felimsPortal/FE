@@ -57,12 +57,6 @@ const Portal = () => {
     };
   }, []);
 
-  // const loadMoreMovies = () => {
-  //   if (page < totalPages) {
-  //     setPage(page + 1);
-  //   }
-  // };
-
   if (!firebaseUid) {
     return <div>Loading...</div>;
   }
@@ -96,14 +90,6 @@ const Portal = () => {
           For You
         </h1>
         <EmblaCarousel firebase_uid={firebaseUid} pageNumber={page} />
-        {/* {page < totalPages && (
-          <button
-            onClick={loadMoreMovies}
-            className="mt-8 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-          >
-            Load More
-          </button>
-        )} */}
       </div>
       {/* continue watching */}
       <div className="w-screen h-screen bg-black mt- pr-5">
