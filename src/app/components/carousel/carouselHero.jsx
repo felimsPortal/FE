@@ -197,35 +197,6 @@ const EmblaCarouselHero = ({ selectedLanguage }) => {
 
     fetchAllDetails();
   }, [movieHero]);
-  // useEffect(() => {
-  //   const fetchAllDetails = async () => {
-  //     const detailsPromises = movieHero.map(async (movie) => {
-  //       try {
-  //         const response = await axios.get(
-  //           `http://localhost:3001/api/radar/movies/${movie.id}`
-  //         );
-  //         return { [movie.id]: response.data };
-  //       } catch (error) {
-  //         console.error(
-  //           `Error fetching details for movie ID ${movie.id}:`,
-  //           error
-  //         );
-  //         return { [movie.id]: null };
-  //       }
-  //     });
-
-  //     const detailsArray = await Promise.all(detailsPromises);
-  //     const detailsMap = detailsArray.reduce(
-  //       (acc, details) => ({ ...acc, ...details }),
-  //       {}
-  //     );
-  //     setMovieDetails(detailsMap);
-  //   };
-
-  //   if (movieHero.length > 0) {
-  //     fetchAllDetails();
-  //   }
-  // }, [movieHero]);
 
   return (
     <section

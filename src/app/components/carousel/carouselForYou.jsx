@@ -1,3 +1,108 @@
+// "use client";
+// import React, { useEffect, useState } from "react";
+// import Image from "next/image";
+// import { getGenreNames } from "../genres/genres";
+// import { getLanguageNames } from "../lanuages/languages";
+// import { DotButton, useDotButton } from "./emblaCarouselDotButton";
+// import {
+//   PrevButton,
+//   NextButton,
+//   usePrevNextButtons,
+// } from "./emblaCarouselArrowButtons";
+// import useEmblaCarousel from "embla-carousel-react";
+// import { FcLike, FcBookmark } from "react-icons/fc";
+// import { useMovies } from "../../context/MovieContext";
+// import Loader from "../loader/loader"; // Import Loader
+
+// const EmblaCarousel = ({ firebase_uid, page }) => {
+//   const { movies, fetchMovies } = useMovies();
+//   const [emblaRef, emblaApi] = useEmblaCarousel({
+//     loop: false,
+//     speed: 20,
+//     slidesToScroll: 2,
+//   });
+//   const [carouselLoading, setCarouselLoading] = useState(false); // Local loading state for carousel
+//   const slidesPerGroup = 5;
+
+//   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(
+//     emblaApi,
+//     slidesPerGroup
+//   );
+
+//   const {
+//     prevBtnDisabled,
+//     nextBtnDisabled,
+//     onPrevButtonClick,
+//     onNextButtonClick,
+//   } = usePrevNextButtons(emblaApi);
+
+//   useEffect(() => {
+//     if (firebase_uid) {
+//       setCarouselLoading(true); // Start local loading
+//       fetchMovies(firebase_uid, page).finally(() => setCarouselLoading(false)); // Stop local loading after fetching
+//     }
+//   }, [firebase_uid, page, fetchMovies]);
+
+//   if (carouselLoading) return <Loader />; // Show a local loader within the carousel
+
+//   return (
+//     <section className="max-w-screen relative">
+//       {/* Carousel Dots */}
+//       <div className="embla__dots text-center">
+//         {scrollSnaps.map((_, index) => (
+//           <DotButton
+//             key={index}
+//             onClick={() => onDotButtonClick(index)}
+//             className={"embla__dot".concat(
+//               index === selectedIndex ? " embla__dot--selected" : ""
+//             )}
+//           />
+//         ))}
+//       </div>
+
+//       {/* Carousel Slides */}
+//       <div className="embla__viewport" ref={emblaRef}>
+//         <div className="embla__container">
+//           {movies.map((movie, index) => (
+//             <div className="embla__slide relative" key={index}>
+//               <img
+//                 src={movie.poster_path}
+//                 alt={`Slide ${index + 1}`}
+//                 className="embla__slide__img rounded-xl"
+//               />
+//               <div className="embla__slide__overlay flex flex-col">
+//                 {/* Slide Content */}
+//                 <div className="w-full flex justify-evenly items-center mt-10">
+//                   <Image
+//                     src="/Logo3.png"
+//                     alt="logo"
+//                     width={50}
+//                     height={75.47}
+//                     className="cursor-pointer"
+//                   />
+//                   <FcBookmark size={40} className="cursor-pointer" />
+//                   <FcLike size={43} className="cursor-pointer" />
+//                 </div>
+//                 <div className="p-6">
+//                   <p className="text-xl text-center">{movie.title}</p>
+//                   <p>Language: {getLanguageNames([movie.original_language])}</p>
+//                   <p>Avg vote: {movie.vote_average}</p>
+//                   <p>Release Date: {movie.release_date}</p>
+//                   <p>Genres: {getGenreNames(movie.genre_ids).join(", ")}</p>
+//                   <hr />
+//                   <p className="text-center">{movie.overview}</p>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default EmblaCarousel;
+
 "use client";
 import React, { useEffect } from "react";
 import Image from "next/image";

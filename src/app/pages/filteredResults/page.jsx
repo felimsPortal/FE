@@ -30,6 +30,80 @@ const FilteredResults = () => {
 
   const router = useRouter();
 
+  const handleDownloadAndNavigate = async (tmdbId) => {
+    try {
+      console.log("TMDB ID being sent:", tmdbId);
+
+      // Check if the movie already exists in Radarr
+      const checkResponse = await fetch(
+        `http://localhost:3001/api/radar/check/${tmdbId}`
+      );
+
+      if (!checkResponse.ok) {
+        throw new Error("Failed to check movie in Radarr");
+      }
+
+      const checkData = await checkResponse.json();
+
+      if (checkData.exists) {
+        // Movie already exists, skip download and navigate to the play page
+        console.log("Movie already exists, navigating to play page");
+        router.push(`/pages/play?tmdbId=${tmdbId}`);
+      } else {
+        // Movie does not exist, proceed with downloading
+        const downloadResponse = await fetch(
+          "http://localhost:3001/api/radar/download",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ tmdbId }), // Send tmdbId in the request body
+          }
+        );
+
+        if (downloadResponse.ok) {
+          console.log("Movie added to download queue");
+          // After the download is triggered, navigate to the play page
+          router.push(`/pages/play?tmdbId=${tmdbId}`);
+        } else {
+          const errorData = await downloadResponse.json();
+          console.error("Error details:", errorData);
+          console.error("Failed to add movie to download queue");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  // const handleDownloadAndNavigate = async (tmdbId) => {
+  //   try {
+  //     // Trigger the movie download
+  //     console.log("TMDB ID being sent:", tmdbId);
+
+  //     const response = await fetch("http://localhost:3001/api/radar/download", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ tmdbId }), // Send tmdbId in the request body
+  //     });
+
+  //     if (response.ok) {
+  //       console.log("Movie added to download queue");
+  //       // After the download is triggered, navigate to the play page
+  //       router.push(`/pages/play?tmdbId=${tmdbId}`);
+  //     } else {
+  //       const errorData = await response.json();
+  //       console.error("Error details:", errorData);
+  //       console.error("Failed to add movie to download queue");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+
   const handleTrailerClick = (youtubeTrailerId) => {
     setSelectedTrailerId(youtubeTrailerId);
     setIsModalOpen(true);
@@ -244,7 +318,7 @@ const FilteredResults = () => {
                           <div className="w-full flex justify-evenly items-center mt-5">
                             <button
                               onClick={() =>
-                                router.push(`/pages/play?tmdbId=${movie.id}`)
+                                handleDownloadAndNavigate(movie.id)
                               }
                               className="transform transition-transform duration-300 hover:scale-150 cursor-pointer"
                             >

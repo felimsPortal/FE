@@ -6,7 +6,8 @@ import { Odibee_Sans } from "next/font/google";
 import EmblaCarousel from "../../components/carousel/carouselForYou";
 import EmblaCarouselHero from "../../components/carousel/carouselHero";
 import { UserAuth } from "../../context/AuthContext";
-import { useMovies } from "../../context/MovieContext.js";
+import { useMovies } from "../../context/MovieContext";
+import Loader from "../../components/loader/loader"; // Import Loader
 
 const Odibee = Odibee_Sans({
   weight: "400",
@@ -16,33 +17,35 @@ const Odibee = Odibee_Sans({
 const Portal = () => {
   const { user } = UserAuth();
   const firebaseUid = user?.uid;
-
-  const { totalPages, page, setPage, fetchMovies, fetchMoviesByLanguage } =
-    useMovies();
+  const { page, fetchMovies, fetchMoviesByLanguage } = useMovies();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [preferredLanguage, setPreferredLanguage] = useState(null);
+  const [initialLoading, setInitialLoading] = useState(true); // Global loader for initial data fetch
+  const [hasMounted, setHasMounted] = useState(false); // A flag to track first load
 
   useEffect(() => {
-    if (!firebaseUid) {
-      console.log("Waiting for Firebase UID...");
-      return; // Exit early if firebaseUid is not available
-    }
+    if (!firebaseUid) return;
 
     const loadUserData = async () => {
+      if (!hasMounted) {
+        // Only trigger the global loader during the first mount
+        setInitialLoading(true);
+      }
+
       try {
-        console.log("Fetching user data for firebaseUid:", firebaseUid);
-
-        fetchMoviesByLanguage(firebaseUid, page); // Fetch movies by language
-
-        fetchMovies(firebaseUid, page); // Fetch movies by other preferences
+        await fetchMoviesByLanguage(firebaseUid, page);
+        await fetchMovies(firebaseUid, page);
       } catch (error) {
         console.error("Error fetching user data:", error);
+      } finally {
+        setInitialLoading(false);
+        setHasMounted(true); // Set to true after initial load is completed
       }
     };
 
     loadUserData();
-  }, [firebaseUid, page, fetchMovies, fetchMoviesByLanguage]);
+  }, [firebaseUid, page, fetchMovies, fetchMoviesByLanguage, hasMounted]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,13 +60,14 @@ const Portal = () => {
     };
   }, []);
 
-  if (!firebaseUid) {
-    return <div>Loading...</div>;
+  if (!firebaseUid || initialLoading) {
+    return <Loader />; // Show loader only during the initial load
   }
+
   return (
     <div className="w-screen h-screen">
       <div
-        className={`fixed w-full h-32  z-10 transition-opacity ${
+        className={`fixed w-full h-32 z-10 transition-opacity ${
           isScrolled ? "bg-gradient-to-b from-black to-black" : "bg-transparent"
         }`}
         style={{
@@ -76,25 +80,25 @@ const Portal = () => {
       </div>
 
       {/* Hero Section */}
-
-      <div className="relative w-full h-full flex items-center ">
-        <div className="relative w-full h-full flex items-center bg-pink-500">
+      <div className="relative w-full h-full flex items-center">
+        <div className="relative w-full h-full flex items-center">
           <EmblaCarouselHero selectedLanguage={preferredLanguage} />
         </div>
       </div>
 
       <div className="w-full h-full p-4">
         <h1
-          className={`text-7xl text-center font-bold mt-24   ${Odibee.className}`}
+          className={`text-7xl text-center font-bold mt-24 ${Odibee.className}`}
         >
           For You
         </h1>
         <EmblaCarousel firebase_uid={firebaseUid} pageNumber={page} />
       </div>
-      {/* continue watching */}
+
+      {/* Continue Watching Section */}
       <div className="w-screen h-screen bg-black mt- pr-5">
         <div
-          className={`w-full flex flex-col text-7xl h-1/4 bg-purple-500 mt-48   ml-10 ${Odibee.className}`}
+          className={`w-full flex flex-col text-7xl h-1/4 bg-purple-500 mt-48 ml-10 ${Odibee.className}`}
         >
           CONTINUE WATCHING
         </div>
