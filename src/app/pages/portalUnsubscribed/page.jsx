@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/navbar";
 import Footer from "../../components/footer/footer";
-import { Odibee_Sans } from "next/font/google";
 import EmblaCarousel from "../../components/carousel/carouselForYou";
 import EmblaCarouselHero from "../../components/carousel/carouselHero";
+import Loader from "../../components/loader/loader";
+import { Odibee_Sans } from "next/font/google";
 import { UserAuth } from "../../context/AuthContext";
 import { useMovies } from "../../context/MovieContext";
-import Loader from "../../components/loader/loader"; // Import Loader
 
 const Odibee = Odibee_Sans({
   weight: "400",
@@ -21,8 +21,9 @@ const Portal = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [preferredLanguage, setPreferredLanguage] = useState(null);
-  const [initialLoading, setInitialLoading] = useState(true); // Global loader for initial data fetch
-  const [hasMounted, setHasMounted] = useState(false); // A flag to track first load
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [hasMounted, setHasMounted] = useState(false);
+  const [isContentVisible, setIsContentVisible] = useState(false);
 
   useEffect(() => {
     if (!firebaseUid) return;
@@ -41,6 +42,9 @@ const Portal = () => {
       } finally {
         setInitialLoading(false);
         setHasMounted(true); // Set to true after initial load is completed
+        setTimeout(() => {
+          setIsContentVisible(true); // Enable content visibility after loader
+        }, 200); // Adjust the timeout for a smoother transition
       }
     };
 
@@ -67,42 +71,49 @@ const Portal = () => {
   return (
     <div className="w-screen h-screen">
       <div
-        className={`fixed w-full h-32 z-10 transition-opacity ${
-          isScrolled ? "bg-gradient-to-b from-black to-black" : "bg-transparent"
+        className={`transition-opacity duration-700 ${
+          isContentVisible ? "opacity-100" : "opacity-0"
         }`}
-        style={{
-          background: isScrolled
-            ? "linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1))"
-            : "transparent",
-        }}
       >
-        <Navbar />
-      </div>
-
-      {/* Hero Section */}
-      <div className="relative w-full h-full flex items-center">
-        <div className="relative w-full h-full flex items-center">
-          <EmblaCarouselHero selectedLanguage={preferredLanguage} />
-        </div>
-      </div>
-
-      <div className="w-full h-full p-4">
-        <h1
-          className={`text-7xl text-center font-bold mt-24 ${Odibee.className}`}
-        >
-          For You
-        </h1>
-        <EmblaCarousel firebase_uid={firebaseUid} pageNumber={page} />
-      </div>
-
-      {/* Continue Watching Section */}
-      <div className="w-screen h-screen bg-black mt- pr-5">
         <div
-          className={`w-full flex flex-col text-7xl h-1/4 bg-purple-500 mt-48 ml-10 ${Odibee.className}`}
+          className={`fixed w-full h-32 z-10 transition-opacity ${
+            isScrolled
+              ? "bg-gradient-to-b from-black to-black"
+              : "bg-transparent"
+          }`}
+          style={{
+            background: isScrolled
+              ? "linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 1))"
+              : "transparent",
+          }}
         >
-          CONTINUE WATCHING
+          <Navbar />
         </div>
-        <Footer />
+        {/* Hero Section */}
+        <div className="relative w-full h-full flex items-center">
+          <div className="relative w-full h-full flex items-center">
+            <EmblaCarouselHero selectedLanguage={preferredLanguage} />
+          </div>
+        </div>
+
+        <div className="w-full h-full p-4">
+          <h1
+            className={`text-7xl text-center font-bold mt-24 ${Odibee.className}`}
+          >
+            For You
+          </h1>
+          <EmblaCarousel firebase_uid={firebaseUid} pageNumber={page} />
+        </div>
+
+        {/* Continue Watching Section */}
+        <div className="w-screen h-screen bg-black mt- pr-5">
+          <div
+            className={`w-full flex flex-col text-7xl h-1/4 bg-purple-500 mt-48 ml-10 ${Odibee.className}`}
+          >
+            CONTINUE WATCHING
+          </div>
+          <Footer />
+        </div>
       </div>
     </div>
   );

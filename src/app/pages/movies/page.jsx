@@ -1,17 +1,19 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import axios from "axios";
 import Navbar from "../../components/navbar/navbar";
-import { FcLike } from "react-icons/fc";
-import { FcBookmark } from "react-icons/fc";
 import Image from "next/image";
 import Modal from "../../components/modal/modal.jsx";
+import Loader from "../../components/loader/loader"; // Import Loader
+import { FcLike, FcBookmark } from "react-icons/fc";
 import { Poiret_One } from "next/font/google";
 
 const Poiret = Poiret_One({
   weight: "400",
   subsets: ["latin"],
 });
+
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -21,52 +23,45 @@ const Movies = () => {
   const [movieDetails, setMovieDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTrailerId, setSelectedTrailerId] = useState(null);
+  const [initialLoading, setInitialLoading] = useState(true); // State for initial loading
+  const [isContentVisible, setIsContentVisible] = useState(false); // Control content visibility
+  const [hasMounted, setHasMounted] = useState(false); // Track component mount
 
-  const truncateText = (text, maxLength) => {
-    return text.length > maxLength
-      ? text.substring(0, maxLength) + "..."
-      : text;
-  };
+  // Ensure component is mounted before making state updates
+  useLayoutEffect(() => {
+    setHasMounted(true);
+  }, []);
 
-  const handleTrailerClick = (youtubeTrailerId) => {
-    setSelectedTrailerId(youtubeTrailerId);
-    setIsModalOpen(true);
-  };
+  // Fetch movies on mount and manage loader state
+  useEffect(() => {
+    if (!hasMounted) return; // Skip if the component hasn't mounted yet
 
-  const handlePlayClick = async (tmdbId) => {
-    try {
-      console.log("TMDB ID being sent:", tmdbId);
-      const response = await fetch("http://localhost:3001/api/radar/download", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ tmdbId }),
-      });
-
-      if (response.ok) {
-        console.log("Movie added to download queue");
-      } else {
-        console.error("Failed to add movie to download queue");
+    const fetchMoviesData = async () => {
+      try {
+        setInitialLoading(true);
+        await fetchLatestMovies(page); // Load movies for the current page
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      } finally {
+        setInitialLoading(false);
+        setIsContentVisible(true); // Show content after data is loaded
       }
-      const errorData = await response.json();
-      console.error("Error details:", errorData);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  const loadMoreMovies = () => {
-    console.log("loadMoreMovies function triggered");
-    console.log("Current page:", page);
-    console.log("Total pages:", totalPages);
+    };
 
-    if (page < totalPages) {
-      console.log("Loading more movies...");
-      setPage((prevPage) => prevPage + 1);
-    } else {
-      console.log("No more pages to load");
-    }
-  };
+    fetchMoviesData();
+  }, [page, hasMounted]);
+
+  // Scroll handler to change background on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const fetchLatestMovies = async (pageNumber = 1) => {
     try {
@@ -78,7 +73,6 @@ const Movies = () => {
       );
       setMovies((prevMovies) => [...prevMovies, ...response.data.movies]);
       setTotalPages(response.data.total_pages);
-      console.log("response with data from moviesPage", response.data.movies);
     } catch (error) {
       console.error("Error fetching latest movies:", error);
     }
@@ -95,23 +89,6 @@ const Movies = () => {
     }
   };
 
-  useEffect(() => {
-    fetchLatestMovies(page);
-  }, [page]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   const handleMouseEnter = (movie) => {
     setHoveredMovie(movie);
     fetchMovieDetails(movie.id);
@@ -122,8 +99,51 @@ const Movies = () => {
     setMovieDetails(null);
   };
 
+  const handlePlayClick = async (tmdbId) => {
+    try {
+      const response = await fetch("http://localhost:3001/api/radar/download", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tmdbId }),
+      });
+
+      if (response.ok) {
+        console.log("Movie added to download queue");
+      } else {
+        console.error("Failed to add movie to download queue");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const loadMoreMovies = () => {
+    if (page < totalPages) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handleTrailerClick = (youtubeTrailerId) => {
+    setSelectedTrailerId(youtubeTrailerId);
+    setIsModalOpen(true);
+  };
+
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + "..."
+      : text;
+  };
+
+  // Render Loader if still loading
+  if (initialLoading && !isContentVisible) {
+    return <Loader />;
+  }
+
   return (
     <div className="w-screen h-screen">
+      {/* Navbar Section */}
       <div
         className={`fixed w-full h-32 z-10 transition-opacity ${
           isScrolled ? "bg-gradient-to-b from-black to-black" : "bg-transparent"
@@ -137,17 +157,20 @@ const Movies = () => {
         <Navbar />
       </div>
 
-      <br />
-      <div className="container mx-auto pt-32">
+      {/* Main Content */}
+      <div
+        className={`container mx-auto pt-32 transition-opacity duration-700 ${
+          isContentVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
         <div className="w-full h-24 p-4 flex justify-center items-center">
           <h1 className={`text-white text-6xl ${Poiret.className}`}>
             Latest Movies
           </h1>
         </div>
-        <br />
         <hr className="h-1 bg-gradient-to-r from-red-700 via-green-500 to-black border-0" />
-        <br />
-        <div className="grid grid-cols-4 gap-8">
+
+        <div className="grid grid-cols-4 gap-8 mt-4">
           {movies.length > 0 ? (
             movies.map((movie) => (
               <div
@@ -161,16 +184,17 @@ const Movies = () => {
                   alt={movie.title}
                   className="w-full rounded-lg"
                 />
+
                 {/* Overlay: Show detailed info on hover */}
                 {hoveredMovie?.id === movie.id && movieDetails && (
-                  <div className="absolute inset-0 bg-black bg-opacity-80 p-4 flex flex-col ">
-                    <div className=" w-full flex justify-evenly items-center mt-10">
+                  <div className="absolute inset-0 bg-black bg-opacity-80 p-4 flex flex-col">
+                    <div className="w-full flex justify-evenly items-center mt-10">
                       <button onClick={() => handlePlayClick(movie.id)}>
                         <Image
                           src="/Logo3.png"
                           alt="logo"
                           width={50}
-                          height={75.47}
+                          height={75}
                           className="transform transition-transform duration-300 hover:scale-150 cursor-pointer"
                         />
                       </button>
@@ -181,52 +205,10 @@ const Movies = () => {
                         <FcLike size={43} />
                       </div>
                     </div>
-                    <br />
-                    <h3 className="text-lg font-bold text-center ">
+                    <h3 className="text-lg font-bold text-center">
                       {movieDetails.title}
                     </h3>
-
-                    <br />
-                    <p>
-                      <strong>Year:</strong> {movieDetails.year}
-                    </p>
-                    <p>
-                      <strong>Language:</strong> {movieDetails.originalLanguage}
-                    </p>
-                    <p>
-                      <strong>Genres:</strong> {movieDetails.genres.join(", ")}
-                    </p>
-                    {movieDetails.imdbRating !== "TBD" && (
-                      <p>
-                        <strong>IMDb Rating:</strong> {movieDetails.imdbRating}
-                      </p>
-                    )}
-                    <p>
-                      <strong>General Rating:</strong> {movieDetails.tmdbRating}
-                    </p>
-                    <p>
-                      <strong>Run Time - mins:</strong> {movieDetails.runtime}
-                    </p>
-                    <p>
-                      <strong>Cert:</strong> {movieDetails.certification}
-                    </p>
-                    <br />
-                    <hr />
                     <p>{truncateText(movieDetails.overview, 128)}</p>
-
-                    {/* Trailer Button */}
-                    {movieDetails.youtubeTrailerId && (
-                      <div className="text-center">
-                        <button
-                          onClick={() =>
-                            handleTrailerClick(movieDetails.youtubeTrailerId)
-                          }
-                          className="inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
-                        >
-                          Watch Trailer
-                        </button>
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
@@ -235,20 +217,19 @@ const Movies = () => {
             <p className="text-white">No movies available</p>
           )}
         </div>
+
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           youtubeTrailerId={selectedTrailerId}
         />
       </div>
-      <div className="w-full h-24  p-4 flex justify-center items-center ">
+
+      {/* Load More Button */}
+      <div className="w-full h-24 p-4 flex justify-center items-center">
         <button
-          onClick={() => {
-            console.log("Load More button clicked");
-            loadMoreMovies();
-          }}
-          className="bg-gray-900 w-40 h-12 rounded-lg shadow-sm shadow-gray-500 cursor-pointer  border border-red-500  hover:bg-blue-700 transition"
-          type="button"
+          onClick={loadMoreMovies}
+          className="bg-gray-900 w-40 h-12 rounded-lg shadow-sm shadow-gray-500 cursor-pointer border border-red-500 hover:bg-blue-700 transition"
         >
           Load More
         </button>

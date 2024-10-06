@@ -105,7 +105,8 @@ const EmblaCarouselHero = ({ selectedLanguage }) => {
 
     const startAutoplay = () => {
       console.log("Starting autoplay with setInterval");
-      clearAutoplay(); // Clear any existing interval before starting a new one
+      if (autoplayIntervalRef.current || isModalOpen) return;
+      // clearAutoplay(); // Clear any existing interval before starting a new one
 
       autoplayIntervalRef.current = setInterval(() => {
         if (emblaApi.canScrollNext()) {
@@ -125,6 +126,12 @@ const EmblaCarouselHero = ({ selectedLanguage }) => {
         autoplayIntervalRef.current = null;
       }
     };
+
+    if (isModalOpen) {
+      clearAutoplay();
+    } else {
+      startAutoplay();
+    }
 
     const handleMouseEnter = () => {
       console.log("Mouse entered overlay, stopping autoplay");
@@ -158,9 +165,11 @@ const EmblaCarouselHero = ({ selectedLanguage }) => {
           overlayDiv.removeEventListener("mouseleave", handleMouseLeave);
         }
       });
-      clearAutoplay(); // Ensure autoplay is stopped on unmount
+      return () => clearAutoplay();
+      // clearAutoplay(); // Ensure autoplay is stopped on unmount
     };
-  }, [emblaApi, movieHero]);
+  }, [emblaApi, movieHero, isModalOpen]);
+
   useEffect(() => {
     const fetchAllDetails = async () => {
       try {
@@ -264,18 +273,19 @@ const EmblaCarouselHero = ({ selectedLanguage }) => {
                       <br />
                       <div className="flex items-center justify-around ">
                         {/* Trailer Button */}
-                        {details.youtubeTrailerId && (
-                          <div className="text-center ">
-                            <button
-                              onClick={() =>
-                                handleTrailerClick(details.youtubeTrailerId)
-                              }
-                              className="inline-block  text-white font-bold py-2 px-4  bg-gray-900 w-40 h-12 hover:scale-110 rounded-lg shadow-sm shadow-gray-500 cursor-pointer z-50 border border-red-500"
-                            >
-                              Watch Trailer
-                            </button>
-                          </div>
-                        )}
+                        {details.youtubeTrailerId &&
+                          details.youtubeTrailerId !== "N/A" && (
+                            <div className="text-center ">
+                              <button
+                                onClick={() =>
+                                  handleTrailerClick(details.youtubeTrailerId)
+                                }
+                                className="inline-block  text-white font-bold py-2 px-4  bg-gray-900 w-40 h-12 hover:scale-110 rounded-lg shadow-sm shadow-gray-500 cursor-pointer z-50 border border-red-500"
+                              >
+                                Watch Trailer
+                              </button>
+                            </div>
+                          )}
                         <Image
                           src="/Logo3.png"
                           alt="logo"
